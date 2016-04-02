@@ -1,14 +1,20 @@
 package com.jevon.studentrollrecorder;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.client.Firebase;
 public class MainActivity extends AppCompatActivity {
@@ -17,7 +23,6 @@ public class MainActivity extends AppCompatActivity {
     private TextView tv_res;
     private FloatingActionButton fab_scan;
 
-public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
             if(grantResults.length>0 && grantResults[0]==PackageManager.PERMISSION_GRANTED)
                 startActivityForResult(new Intent(MainActivity.this, Scanner.class), REQUEST_SCANNER);
              else
-                Toast.makeText(this,"Camera permissions must be granted",Toast.LENGTH_LONG).show();
+                Toast.makeText(this,"Camera permissions must be granted", Toast.LENGTH_LONG).show();
         }
     }
 
