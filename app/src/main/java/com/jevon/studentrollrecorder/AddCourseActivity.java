@@ -26,6 +26,7 @@ public class AddCourseActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         et_code = (EditText) findViewById(R.id.et_course_code);
         et_name = (EditText) findViewById(R.id.et_course_name);
+        //comment
     }
 
     private void saveCourse(){
