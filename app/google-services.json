@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_id": "student-attendance-system-1269",
+    "project_number": "304679737157",
+    "name": "Student Attendance System"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:304679737157:android:9986f2eabe4eecf4",
+        "client_id": "android:com.jevon.studentrollrecorder",
+        "client_type": 1,
+        "android_client_info": {
+          "package_name": "com.jevon.studentrollrecorder",
+          "certificate_hash": []
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "304679737157-4kv7o4s5up73qn1qgvjsfnug64su648l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "cloud_messaging_service": {
+          "status": 1,
+          "apns_config": []
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "google_signin_service": {
+          "status": 1
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "client_info": [],
+  "ARTIFACT_VERSION": "1"
+}
