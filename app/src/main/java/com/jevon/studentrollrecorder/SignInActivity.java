@@ -1,15 +1,19 @@
 package com.jevon.studentrollrecorder;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.firebase.client.AuthData;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
@@ -23,7 +27,7 @@ public class SignInActivity extends AppCompatActivity  implements
 
     private GoogleApiClient mGoogleApiClient;
     private static final int RC_SIGN_IN = 9001;
-    TextView userName;
+    private TextView userName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,15 +44,17 @@ public class SignInActivity extends AppCompatActivity  implements
                         .setAction("Action", null).show();
             }
         });
+        //setting application context
+        Firebase.setAndroidContext(this);
 
+        //find the userID text view
         findViewById(R.id.sign_in_button).setOnClickListener(this);
         userName = (TextView) findViewById(R.id.userId);
 
-
+        //set up google sign-in options and the apiClient
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
-
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
@@ -58,7 +64,6 @@ public class SignInActivity extends AppCompatActivity  implements
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
@@ -67,15 +72,43 @@ public class SignInActivity extends AppCompatActivity  implements
     }
 
     private void handleSignInResult(GoogleSignInResult result) {
-        Log.d("BLAH", "handleSignInResult:" + result.isSuccess());
+        final Context ctx = this;
+        userName.setText(result.getSignInAccount().getDisplayName());
         if (result.isSuccess()) {
-            // Signed in successfully, show authenticated UI.
-            GoogleSignInAccount acct = result.getSignInAccount();
-            userName.setText(acct.getDisplayName());
-            //updateUI(true);
+            final GoogleSignInResult gsir = result;
+            //create thread to obtain the authentication token which will be used for firebase login.
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    // Signed in successfully, show authenticated UI.
+                    GoogleSignInAccount acct = gsir.getSignInAccount();;
+                    String scopes = "oauth2:profile email";
+                    try {
+                        String token = GoogleAuthUtil.getToken(getApplicationContext(), acct.getEmail(), scopes);
+                        Firebase ref = new Firebase("https://comp3275.firebaseio.com");
+                        ref.authWithOAuthToken("google", token, new Firebase.AuthResultHandler() {
+                            @Override
+                            public void onAuthenticated(AuthData authData) {
+                                // the Google user is now authenticated with your Firebase app
+
+                                //NEED TO PUT AUTH TOKEN INTO BUNDLE OR EITHER PUT DATA IN FIREBASE HERE.
+                                ctx.startActivity(new Intent(SignInActivity.this, MainActivity.class));
+                            }
+
+                            @Override
+                            public void onAuthenticationError(FirebaseError firebaseError) {
+                                // there was an error
+                            }
+                        });
+                    }
+                    catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            });
+            thread.start();
         } else {
             // Signed out, show unauthenticated UI.
-            //updateUI(false);
         }
     }
 
@@ -94,7 +127,5 @@ public class SignInActivity extends AppCompatActivity  implements
     }
 
     @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-
-    }
+    public void onConnectionFailed(ConnectionResult connectionResult) {}
 }
