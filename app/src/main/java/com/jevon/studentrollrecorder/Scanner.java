@@ -5,12 +5,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.ToggleButton;
 
+import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
@@ -23,6 +28,9 @@ public class Scanner extends AppCompatActivity implements ZXingScannerView.Resul
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scanner);
         mScannerView = (ZXingScannerView) findViewById(R.id.scannerView);
+        ArrayList<BarcodeFormat> formats = new ArrayList<>();
+        formats.add(BarcodeFormat.CODE_39); //set the scanner to read only the format of the student Id
+        mScannerView.setFormats(formats);
         sw_flash = (Switch) findViewById(R.id.sw_flash);
 
         sw_flash.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
