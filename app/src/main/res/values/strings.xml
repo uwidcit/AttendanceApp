@@ -5,4 +5,8 @@
     <string name="title_activity_add_course">Add Course</string>
     <string name="title_activity_sign_in">Present!</string>
     <string name="title_activity_scanner">Scanner</string>
+    <string name="title_activity_view_courses">Courses</string>
+    <string name="title_activity_present">Students Present</string>
+    <string name="title_activity_course_details">Course Details</string>
+
 </resources>

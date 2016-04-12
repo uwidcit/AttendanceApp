@@ -7,13 +7,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,12 +21,13 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
+import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.auth.api.Auth;
+import com.jevon.studentrollrecorder.utils.MyApplication;
 
 public class SignInActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener,
@@ -40,6 +39,8 @@ public class SignInActivity extends AppCompatActivity implements
     private static final int PERMISSION_INTERNET = 2;
     private TextView tv_title;
     private ProgressDialog progressDialog;
+    private MyApplication myApplication;
+    private Firebase ref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,11 +48,9 @@ public class SignInActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_sign_in);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        //setting application context
-        Firebase.setAndroidContext(this);
-
-        //find the userID text view
+        myApplication = (MyApplication)getApplicationContext();
+        myApplication.setFireBaseRef("https://comp3275.firebaseio.com");
+        ref = myApplication.getRef();
         findViewById(R.id.sign_in_button).setOnClickListener(this);
         tv_title = (TextView) findViewById(R.id.tv_title);
 
@@ -107,9 +106,7 @@ public class SignInActivity extends AppCompatActivity implements
     private void handleSignInResult(final GoogleSignInResult result) {
         final Context ctx = this;
 //        userName.setText(result.getSignInAccount().getDisplayName());
-
         if (result.isSuccess()) {
-
             final GoogleSignInResult gsir = result;
             //create thread to obtain the authentication token which will be used for firebase login.
             Thread thread = new Thread(new Runnable() {
@@ -126,13 +123,14 @@ public class SignInActivity extends AppCompatActivity implements
                                     PERMISSION_INTERNET);
                         }
                         else {
-                            String token = GoogleAuthUtil.getToken(getApplicationContext(), acct.getEmail(), scopes);
-                            Firebase ref = new Firebase("https://comp3275.firebaseio.com");
+                            final String token = GoogleAuthUtil.getToken(getApplicationContext(), acct.getEmail(), scopes);
                             ref.authWithOAuthToken("google", token, new Firebase.AuthResultHandler() {
                                 @Override
                                 public void onAuthenticated(AuthData authData) {
                                     // the Google user is now authenticated with your Firebase app
                                     //NEED TO PUT AUTH TOKEN INTO BUNDLE OR EITHER PUT DATA IN FIREBASE HERE.
+
+                                    myApplication.setUid(authData.getUid());
                                     Snackbar.make(tv_title,"Signed in as: " + result.getSignInAccount().getDisplayName(),Snackbar.LENGTH_LONG).show();
                                     progressDialog.dismiss();
                                     ctx.startActivity(new Intent(SignInActivity.this, MainActivity.class));

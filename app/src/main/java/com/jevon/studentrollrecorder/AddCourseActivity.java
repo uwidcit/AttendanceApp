@@ -1,18 +1,15 @@
 package com.jevon.studentrollrecorder;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
-import com.github.florent37.materialtextfield.MaterialTextField;
 import com.jevon.studentrollrecorder.pojo.Course;
+import com.jevon.studentrollrecorder.utils.FirebaseHelper;
 
 public class AddCourseActivity extends AppCompatActivity {
 
@@ -37,6 +34,8 @@ public class AddCourseActivity extends AppCompatActivity {
         }
         else {
             Course c = new Course(code,name);
+            FirebaseHelper fh = new FirebaseHelper();
+            fh.addCourse(c);
             Snackbar.make(et_code,"Created "+c.toString(),Snackbar.LENGTH_INDEFINITE).show();
             et_code.setText("");
             et_name.setText("");

@@ -17,13 +17,13 @@
     <com.github.florent37.materialtextfield.MaterialTextField
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:mtf_image="@drawable/icon_id_tag">
+        app:mtf_image="@drawable/ic_tag">
 
         <EditText
             android:id="@+id/et_course_code"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Course code" />
+            android:hint="Course Code" />
 
     </com.github.florent37.materialtextfield.MaterialTextField>
 

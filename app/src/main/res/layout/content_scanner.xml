@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="0dp"
@@ -13,23 +12,23 @@
     tools:context="com.jevon.studentrollrecorder.Scanner"
     tools:showIn="@layout/activity_scanner">
 
-    <Switch
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Flash  "
-        android:id="@+id/sw_flash"
-        android:layout_marginLeft="15dp"/>
-
 
     <me.dm7.barcodescanner.zxing.ZXingScannerView
+        android:id="@+id/scannerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/scannerView">
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/sw_flash">
 
     </me.dm7.barcodescanner.zxing.ZXingScannerView>
 
+    <Switch
+        android:id="@+id/sw_flash"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:gravity="bottom|end"
+        android:text="Flash  " />
 
 
-
-
-</LinearLayout>
+</RelativeLayout>
