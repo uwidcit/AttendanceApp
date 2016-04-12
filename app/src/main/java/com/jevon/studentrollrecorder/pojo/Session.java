@@ -1,6 +1,6 @@
 package com.jevon.studentrollrecorder.pojo;
 
-import java.text.DecimalFormat;
+import com.jevon.studentrollrecorder.utils.Utils;
 
 
 /**
@@ -22,19 +22,9 @@ public class Session{
 
     @Override
     public String toString() {
-        return day+ "  "+ formatTime(startHr,startMin) + " - " + formatTime(endHr,endMin);
+        return day+ "  "+ Utils.formatTime(startHr,startMin) + " - " + Utils.formatTime(endHr,endMin);
     }
 
-    private String formatTime(int hour, int minute){
-        String am_pm = "am";
-        if(hour>=12 && hour < 24){
-            am_pm = "pm";
-            hour = hour % 12;
-        }
-        if(hour == 0) hour = 12;
-        DecimalFormat df = new DecimalFormat("00");
-        return df.format(hour)+":"+df.format(minute)+" "+am_pm;
-    }
 
     public int getStartHr() {
         return startHr;

@@ -16,8 +16,8 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 import com.jevon.studentrollrecorder.pojo.Course;
-import com.jevon.studentrollrecorder.utils.Constants;
 import com.jevon.studentrollrecorder.utils.FirebaseHelper;
+import com.jevon.studentrollrecorder.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -62,10 +62,10 @@ public class ViewCourses extends AppCompatActivity {
         lv_courses.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent i = new Intent(ViewCourses.this,CourseDetailsActivity.class);
+                Intent i = new Intent(ViewCourses.this,ViewSessionsActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putString(Constants.COURSE_CODE,courses.get(position).getCourseCode());
-                bundle.putString(Constants.COURSE_NAME,courses.get(position).getCourseName());
+                bundle.putString(Utils.COURSE_CODE,courses.get(position).getCourseCode());
+                bundle.putString(Utils.COURSE_NAME,courses.get(position).getCourseName());
                 i.putExtras(bundle);
                 startActivity(i);
             }

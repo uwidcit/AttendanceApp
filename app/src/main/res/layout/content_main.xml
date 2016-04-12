@@ -15,8 +15,19 @@
     tools:showIn="@layout/activity_main">
 
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Scan barcodes to record students who are present for this session"
+        android:id="@+id/textView"
+        android:textColor="#FFF"
+        android:layout_marginBottom="10dp"
+        android:layout_gravity="center_horizontal" />
+
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/lv_present"></ListView>
+        android:id="@+id/lv_present">
+    </ListView>
 </LinearLayout>

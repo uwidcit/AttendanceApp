@@ -38,7 +38,7 @@ public class FirebaseHelper {
                 try{
                     sesMap = m.convertValue(s, HashMap.class);
                 }catch (IllegalArgumentException e){e.printStackTrace();}
-            ref_id.child(courseCode).child(Constants.SESSIONS).push().setValue(sesMap);
+            ref_id.child(courseCode).child(Utils.SESSIONS).push().setValue(sesMap);
         }
     }
 

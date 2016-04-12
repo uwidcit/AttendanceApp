@@ -21,10 +21,9 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.jevon.studentrollrecorder.pojo.Session;
-import com.jevon.studentrollrecorder.utils.Constants;
 import com.jevon.studentrollrecorder.utils.FirebaseHelper;
+import com.jevon.studentrollrecorder.utils.Utils;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -50,8 +49,8 @@ public class CourseDetailsActivity extends AppCompatActivity {
         context = this;
         Bundle extras = getIntent().getExtras();
         if(extras!=null){
-            code = extras.getString(Constants.COURSE_CODE);
-            name = extras.getString(Constants.COURSE_NAME);
+            code = extras.getString(Utils.COURSE_CODE);
+            name = extras.getString(Utils.COURSE_NAME);
             ActionBar actionBar = getSupportActionBar();
             if(actionBar != null)
                 actionBar.setTitle(code);
@@ -146,12 +145,12 @@ public class CourseDetailsActivity extends AppCompatActivity {
                 if(which == 1){
                     startHr = hourOfDay;
                     startMin = minute;
-                    tv_start.setText(formatTime(hourOfDay,minute));
+                    tv_start.setText(Utils.formatTime(hourOfDay,minute));
                 }
                 else if(which == 2) {
                     endHr = hourOfDay;
                     endMin = minute;
-                    tv_end.setText(formatTime(hourOfDay, minute));
+                    tv_end.setText(Utils.formatTime(hourOfDay, minute));
                 }
             }
         }, hour, minute, false);
@@ -159,16 +158,6 @@ public class CourseDetailsActivity extends AppCompatActivity {
         d.show();
     }
 
-    private String formatTime(int hour, int minute){
-        String am_pm = "am";
-        if(hour>=12 && hour < 24){
-            am_pm = "pm";
-            hour = hour % 12;
-        }
-        if(hour == 0) hour = 12;
-        DecimalFormat df = new DecimalFormat("00");
-        return df.format(hour)+":"+df.format(minute)+" "+am_pm;
-    }
 
     private void resetFields() {
         tv_end.setText("End");

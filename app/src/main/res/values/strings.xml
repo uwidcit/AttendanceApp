@@ -8,5 +8,6 @@
     <string name="title_activity_view_courses">Courses</string>
     <string name="title_activity_present">Students Present</string>
     <string name="title_activity_course_details">Course Details</string>
+    <string name="title_activity_view_sessions">View Sessions</string>
 
 </resources>

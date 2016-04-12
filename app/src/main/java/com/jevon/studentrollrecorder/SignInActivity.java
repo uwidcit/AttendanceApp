@@ -129,7 +129,6 @@ public class SignInActivity extends AppCompatActivity implements
                                 public void onAuthenticated(AuthData authData) {
                                     // the Google user is now authenticated with your Firebase app
                                     //NEED TO PUT AUTH TOKEN INTO BUNDLE OR EITHER PUT DATA IN FIREBASE HERE.
-
                                     myApplication.setUid(authData.getUid());
                                     Snackbar.make(tv_title,"Signed in as: " + result.getSignInAccount().getDisplayName(),Snackbar.LENGTH_LONG).show();
                                     progressDialog.dismiss();

@@ -44,7 +44,11 @@
         <activity
             android:name=".CourseDetailsActivity"
             android:label="@string/title_activity_course_details"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ViewSessionsActivity"
+            android:label="@string/title_activity_view_sessions"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
