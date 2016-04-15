@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -21,7 +22,7 @@ import com.jevon.studentrollrecorder.utils.Utils;
 
 import java.util.ArrayList;
 
-public class ViewCourses extends AppCompatActivity {
+public class ViewCoursesActivity extends AppCompatActivity {
     private ListView lv_courses;
     private ArrayList<Course> courses;
     private ArrayAdapter<Course> adapter;
@@ -42,7 +43,7 @@ public class ViewCourses extends AppCompatActivity {
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    startActivity(new Intent(ViewCourses.this, AddCourseActivity.class));
+                    startActivity(new Intent(ViewCoursesActivity.this, AddCourseActivity.class));
                 }
             });
         lv_courses = (ListView) findViewById(R.id.lv_view_courses);
@@ -56,13 +57,13 @@ public class ViewCourses extends AppCompatActivity {
             Log.e("Courses", courses.get(0).toString());
         else
             Log.e("Courses", "courses is empty");
-        adapter = new ArrayAdapter<>(ViewCourses.this,R.layout.layout_listview_item_lg,courses);
+        adapter = new ArrayAdapter<>(ViewCoursesActivity.this,R.layout.layout_listview_item_lg,courses);
         lv_courses.setAdapter(adapter);
 
         lv_courses.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent i = new Intent(ViewCourses.this,ViewSessionsActivity.class);
+                Intent i = new Intent(ViewCoursesActivity.this,ViewLecturesActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putString(Utils.COURSE_CODE,courses.get(position).getCourseCode());
                 bundle.putString(Utils.COURSE_NAME,courses.get(position).getCourseName());
@@ -79,11 +80,16 @@ public class ViewCourses extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 adapter.clear();
-                for (DataSnapshot postSnapshot: snapshot.getChildren()){
-                    Course c = postSnapshot.getValue(Course.class);
-                    Log.e("Course received", c.toString());
-                    adapter.add(c);
+                if(snapshot.hasChildren()){
+                    for (DataSnapshot coursesSnapshot: snapshot.getChildren()){
+                        Course c = coursesSnapshot.getValue(Course.class);
+                        Log.e("Course received", c.toString());
+                        adapter.add(c);
+                    }
                 }
+                else
+                    Toast.makeText(ViewCoursesActivity.this,"No courses found on your account",Toast.LENGTH_LONG).show();
+
             }
             @Override public void onCancelled(FirebaseError error) {
                 System.out.println("The read failed: " + error.getMessage());

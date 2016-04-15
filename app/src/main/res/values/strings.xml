@@ -7,7 +7,7 @@
     <string name="title_activity_scanner">Scanner</string>
     <string name="title_activity_view_courses">Courses</string>
     <string name="title_activity_present">Students Present</string>
-    <string name="title_activity_course_details">Course Details</string>
-    <string name="title_activity_view_sessions">View Sessions</string>
+    <string name="title_activity_add_lectures">Add Lectures</string>
+    <string name="title_activity_view_lectures">Lectures</string>
 
 </resources>

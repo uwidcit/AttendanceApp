@@ -13,6 +13,14 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.jevon.studentrollrecorder.AddCourseActivity"
     tools:showIn="@layout/activity_add_course">
+    <TextView
+        android:layout_marginBottom="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#000000"
+        android:background="@drawable/border_style"
+        android:text="Fill out the fields below and click save. You will be prompted to enter the days and times after."
+        android:textAppearance="?android:textAppearanceMedium"/>
 
     <com.github.florent37.materialtextfield.MaterialTextField
         android:layout_width="match_parent"
@@ -41,12 +49,6 @@
 
     </com.github.florent37.materialtextfield.MaterialTextField>
 
-    <TextView
-        android:layout_marginTop="20dp"
-        android:textColor="#eef"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Fill out the above information to add a course. You will be prompted to enter the days and times after."
-        android:textAppearance="?android:textAppearanceMedium"/>
+
 
 </LinearLayout>

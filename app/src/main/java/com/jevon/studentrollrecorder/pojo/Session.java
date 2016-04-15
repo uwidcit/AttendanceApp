@@ -1,68 +1,26 @@
 package com.jevon.studentrollrecorder.pojo;
 
-import com.jevon.studentrollrecorder.utils.Utils;
-
-
 /**
- * Created by jevon on 10-Apr-16.
+ * Created by jevon on 14-Apr-16.
  */
+
+/*Not really a session object. More of an entry of a student for a session. Class necessary for FB
+    to map data*/
 public class Session{
-    private int startHr, startMin, endHr, endMin;
-    private String day;
+    String id;
 
-    public Session(){}
-
-    public Session(int startHr, int startMin, int endHr, int endMin, String day) {
-        this.startHr = startHr;
-        this.startMin = startMin;
-        this.endHr = endHr;
-        this.endMin = endMin;
-        this.day = day;
+    public Session() {
     }
 
-    @Override
-    public String toString() {
-        return day+ "  "+ Utils.formatTime(startHr,startMin) + " - " + Utils.formatTime(endHr,endMin);
+    public Session(String id) {
+        this.id = id;
     }
 
-
-    public int getStartHr() {
-        return startHr;
+    public String getId() {
+        return id;
     }
 
-    public void setStartHr(int startHr) {
-        this.startHr = startHr;
-    }
-
-    public int getStartMin() {
-        return startMin;
-    }
-
-    public void setStartMin(int startMin) {
-        this.startMin = startMin;
-    }
-
-    public int getEndHr() {
-        return endHr;
-    }
-
-    public void setEndHr(int endHr) {
-        this.endHr = endHr;
-    }
-
-    public int getEndMin() {
-        return endMin;
-    }
-
-    public void setEndMin(int endMin) {
-        this.endMin = endMin;
-    }
-
-    public String getDay() {
-        return day;
-    }
-
-    public void setDay(String day) {
-        this.day = day;
+    public void setId(String id) {
+        this.id = id;
     }
 }

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.jevon.studentrollrecorder.CourseDetailsActivity">
+    tools:context=".AddLecturesActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -21,11 +21,12 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_course_details" />
+    <include layout="@layout/content_add_lectures" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_save"
         android:src="@drawable/ic_plus"
+        android:onClick="onClickAddLect"
         app:backgroundTint="@color/colorFab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

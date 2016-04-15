@@ -4,7 +4,7 @@ import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -20,30 +20,38 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.jevon.studentrollrecorder.pojo.Session;
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
+import com.jevon.studentrollrecorder.pojo.Course;
+import com.jevon.studentrollrecorder.pojo.Lecture;
 import com.jevon.studentrollrecorder.utils.FirebaseHelper;
 import com.jevon.studentrollrecorder.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 
-public class CourseDetailsActivity extends AppCompatActivity {
+public class AddLecturesActivity extends AppCompatActivity {
     private String name;
     private String code;
     private Spinner spinner_day;
     private TextView tv_start, tv_end;
     private String day;
     private ListView lv_sessions;
-    private ArrayAdapter<Session> adapter;
-    private ArrayList<Session> sessions;
+    private ArrayAdapter<Lecture> adapter;
+    private ArrayList<Lecture> lectures;
     private Context context;
-    private FloatingActionButton fab_save;
+    private ArrayList<Course> courses;
+    private static final String TAG = "Add lecture activity";
+    private static final String NONE = "none";
     private int startHr = -1, startMin = -1, endHr = -1, endMin = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_course_details);
+        setContentView(R.layout.activity_add_lectures);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         context = this;
@@ -55,45 +63,86 @@ public class CourseDetailsActivity extends AppCompatActivity {
             if(actionBar != null)
                 actionBar.setTitle(code);
         }
-        setUpFAB();
+        getCoursesFromFB();
         setUpSpinner();
         setUpTextViews();
         setUpListView();
 
     }
-
-    private void setUpFAB() {
-        fab_save = (FloatingActionButton) findViewById(R.id.fab_save);
-        fab_save.setOnClickListener(new View.OnClickListener() {
+    
+    //get the list of the user's courses from the DB. Needed to check for clashes
+    public void getCoursesFromFB(){
+        FirebaseHelper fh = new FirebaseHelper();
+        Firebase ref_id = fh.getRef_id();
+        ref_id.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onClick(View v) {
-                if(day != null && startHr != -1 && startMin != -1 && endHr != -1 && endMin != -1){
-                    if(getMilitaryTime(endHr,endMin) - getMilitaryTime(startHr,startMin) >= 100){
-                        sessions.add(0,new Session(startHr,startMin,endHr,endMin,day));
-                        adapter.notifyDataSetChanged();
-                        resetFields();
-                    }
-                    else Toast.makeText(context,"Ensure that start time precede end time by at least 1 Hr",Toast.LENGTH_LONG).show();
+            public void onDataChange(DataSnapshot snapshot) {
+                courses = new ArrayList<>();
+                for (DataSnapshot postSnapshot: snapshot.getChildren()){
+                    Course c = postSnapshot.getValue(Course.class);
+                    Log.e("Course received", c.toString());
+                    courses.add(c);
                 }
-                else Toast.makeText(context,"Select a day, start and end time",Toast.LENGTH_LONG).show();
+            }
+            @Override public void onCancelled(FirebaseError error) {
+                Log.e(TAG,"The read failed: " + error.getMessage());
             }
         });
     }
 
-    private int getMilitaryTime(int hour, int min){
-        return hour*100 + min;
+    /*When the floating action button is clicked
+    * If all fields are filled out and there is no clash
+    *   then the course is added to a list to be pushed when u user clicked the save icon*/
+    public void onClickAddLect(View v) {
+        if (v.getId() == R.id.fab_save){
+            if(day != null && startHr != -1 && startMin != -1 && endHr != -1 && endMin != -1){
+                if(Utils.getMilitaryTime(endHr,endMin) - Utils.getMilitaryTime(startHr,startMin) >= 100){
+                    String clashedWith = isClashing(startHr, endHr, startMin, endMin);
+                    if(clashedWith.equals(NONE)){
+                        lectures.add(0,new Lecture(startHr,startMin,endHr,endMin,day));
+                        adapter.notifyDataSetChanged();
+                        resetFields();
+                    }
+                    else Snackbar.make(lv_sessions, "Clash: " + clashedWith, Snackbar.LENGTH_LONG).show();
+                }
+                else Snackbar.make(lv_sessions,"Ensure that start time precede end time by at least 1 hour",Snackbar.LENGTH_LONG).show();
+            }
+            else Snackbar.make(lv_sessions,"Select a day, start time and end time",Snackbar.LENGTH_LONG).show();
+        }
+    }
+    
+    //check for clashes with other courses
+    private String isClashing(int startHr, int endHr, int startMin, int endMin){
+        if(courses.size() <= 0){
+            Toast.makeText(this, "Could not check for clashes",Toast.LENGTH_LONG).show();
+        }
+        else{
+            int proposed_starttime = Utils.getMilitaryTime(startHr, startMin);
+            int proposed_endtime = Utils.getMilitaryTime(endHr, endMin);
+            for(Course c: courses){
+                HashMap<String,Lecture> lectures = c.getLecturess();
+                if(lectures!=null)
+                    for(Lecture l: lectures.values()){
+                        int lect_start = Utils.getMilitaryTime(l.getStartHr(), l.getStartMin());
+                        int lect_end = Utils.getMilitaryTime(l.getEndHr(), l.getEndMin());
+                        if(lect_start <= proposed_starttime && proposed_starttime < lect_end && l.getDay().equals(day))
+                            return c.getCourseCode() + "[" + Utils.formatTime(l.getStartHr(),l.getStartMin()) + " - " + Utils.formatTime(l.getEndHr(),l.getEndMin()) +"]";
+                        if(proposed_starttime <= lect_start && lect_start < proposed_endtime && l.getDay().equals(day))
+                            return c.getCourseCode() + "[" + Utils.formatTime(l.getStartHr(),l.getStartMin()) + " - " + Utils.formatTime(l.getEndHr(),l.getEndMin()) +"]";
+                    }
+            }
+        }
+        return NONE;
     }
 
     private void setUpListView(){
         lv_sessions = (ListView) findViewById(R.id.lv_sessions);
-        //TODO: fetch data from DB, create session objects and add to adapter
-
-        sessions = new ArrayList<>();
-        adapter = new ArrayAdapter<>(context,R.layout.layout_listview_item_med,sessions);
+        lectures = new ArrayList<>();
+        adapter = new ArrayAdapter<>(context,R.layout.layout_listview_item_med, lectures);
         lv_sessions.setAdapter(adapter);
     }
 
-    private  void  setUpTextViews(){
+    private void setUpTextViews(){
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -114,7 +163,6 @@ public class CourseDetailsActivity extends AppCompatActivity {
         final String[] days = new String[]{"Select a Day","Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.layout_spinner_item, days);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner_day.setPrompt("Select a day");
         spinner_day.setAdapter(adapter);
 
         spinner_day.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -158,7 +206,6 @@ public class CourseDetailsActivity extends AppCompatActivity {
         d.show();
     }
 
-
     private void resetFields() {
         tv_end.setText("End");
         tv_start.setText("Start");
@@ -168,35 +215,34 @@ public class CourseDetailsActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_course_details, menu);
+        getMenuInflater().inflate(R.menu.menu_add_lectures, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_save_all) {
-            saveAllSessions();
+            saveAllLectures();
+            return true;
+        }
+        else if (id == R.id.action_clear_list) {
+            adapter.clear();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void saveAllSessions(){
-        if(sessions.size() > 0){
+    //saves the list of lectures to the DB
+    private void saveAllLectures(){
+        if(lectures.size() > 0){
             FirebaseHelper fh = new FirebaseHelper();
-            fh.addSessions(code, sessions);
-            Toast.makeText(context, "Successfully add "+sessions.size()+" sessions", Toast.LENGTH_LONG).show();
+            fh.addLectures(code, lectures);
+            Snackbar.make(lv_sessions, "Successfully add "+ lectures.size()+" lectures", Snackbar.LENGTH_LONG).show();
             adapter.clear();
         }
         else {
-            Toast.makeText(context, "No sessions to be added", Toast.LENGTH_LONG).show();
+            Snackbar.make(lv_sessions, "No lectures to be added", Snackbar.LENGTH_LONG).show();
         }
 
     }

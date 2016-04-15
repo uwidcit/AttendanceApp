@@ -11,7 +11,7 @@
     <application
         android:name=".utils.MyApplication"
         android:allowBackup="true"
-        android:icon="@drawable/ic_clipboard"
+        android:icon="@drawable/icon_checklist"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -38,17 +38,23 @@
             android:label="@string/title_activity_scanner"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ViewCourses"
+            android:name=".ViewCoursesActivity"
             android:label="@string/title_activity_view_courses"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".CourseDetailsActivity"
-            android:label="@string/title_activity_course_details"
+            android:name=".AddLecturesActivity"
+            android:label="@string/title_activity_add_lectures"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ViewSessionsActivity"
-            android:label="@string/title_activity_view_sessions"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:name=".ViewLecturesActivity"
+            android:label="@string/title_activity_view_lectures"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <service
+            android:name=".service.IdCheckService"
+            android:enabled="true"
+            android:exported="true">
+        </service>
     </application>
 
 </manifest>

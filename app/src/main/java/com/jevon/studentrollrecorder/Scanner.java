@@ -24,7 +24,7 @@ public class Scanner extends AppCompatActivity implements ZXingScannerView.Resul
         setContentView(R.layout.activity_scanner);
         mScannerView = (ZXingScannerView) findViewById(R.id.scannerView);
         ArrayList<BarcodeFormat> formats = new ArrayList<>();
-//        formats.add(BarcodeFormat.CODE_39); //set the scanner to read only the format of the student Id
+        formats.add(BarcodeFormat.CODE_39); //set the scanner to read only the format of the student Id
         mScannerView.setFormats(formats);
 
         sw_flash = (Switch) findViewById(R.id.sw_flash);

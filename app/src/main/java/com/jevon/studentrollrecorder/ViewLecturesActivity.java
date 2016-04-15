@@ -15,22 +15,22 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
-import com.jevon.studentrollrecorder.pojo.Session;
+import com.jevon.studentrollrecorder.pojo.Lecture;
 import com.jevon.studentrollrecorder.utils.FirebaseHelper;
 import com.jevon.studentrollrecorder.utils.Utils;
 
 import java.util.ArrayList;
 
-public class ViewSessionsActivity extends AppCompatActivity {
-    private ArrayList<Session> sessions;
-    private ArrayAdapter<Session> adapter;
+public class ViewLecturesActivity extends AppCompatActivity {
+    private ArrayList<Lecture> lectures;
+    private ArrayAdapter<Lecture> adapter;
     private ListView lv_view_sessions;
     private String courseCode, courseName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_sessions);
+        setContentView(R.layout.activity_view_lectures);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -43,28 +43,25 @@ public class ViewSessionsActivity extends AppCompatActivity {
                 actionBar.setTitle(courseCode);
             setUpListView();
         }
-
-
-
     }
 
     private void setUpListView(){
         lv_view_sessions = (ListView) findViewById(R.id.lv_view_sessions);
-        sessions = new ArrayList<>();
-        adapter = new ArrayAdapter<>(ViewSessionsActivity.this,R.layout.layout_listview_item_lg,sessions);
+        lectures = new ArrayList<>();
+        adapter = new ArrayAdapter<>(ViewLecturesActivity.this,R.layout.layout_listview_item_lg, lectures);
         getSessions();
         lv_view_sessions.setAdapter(adapter);
     }
 
     public void getSessions(){
         FirebaseHelper fh = new FirebaseHelper();
-        Firebase ref_ses = fh.getRef_id().child(courseCode).child(Utils.SESSIONS);
+        Firebase ref_ses = fh.getRef_id().child(courseCode).child(Utils.LECTURES);
         ref_ses.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 adapter.clear();
-                for (DataSnapshot postSnapshot: snapshot.getChildren()){
-                    Session s = postSnapshot.getValue(Session.class);
+                for (DataSnapshot lectSnapshot: snapshot.getChildren()){
+                    Lecture s = lectSnapshot.getValue(Lecture.class);
                     Log.e("Course received", s.toString());
                     adapter.add(s);
                 }
@@ -91,7 +88,7 @@ public class ViewSessionsActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_add_sessions) {
-            Intent i = new Intent(ViewSessionsActivity.this, CourseDetailsActivity.class);
+            Intent i = new Intent(ViewLecturesActivity.this, AddLecturesActivity.class);
             Bundle bundle = new Bundle();
             bundle.putString(Utils.COURSE_CODE,courseCode);
             bundle.putString(Utils.COURSE_NAME,courseName);
