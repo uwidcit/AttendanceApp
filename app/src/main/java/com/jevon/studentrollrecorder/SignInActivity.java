@@ -28,6 +28,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.jevon.studentrollrecorder.pojo.User;
 import com.jevon.studentrollrecorder.utils.MyApplication;
 import com.jevon.studentrollrecorder.utils.Utils;
 
@@ -48,8 +49,10 @@ public class SignInActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         //if logged in before go to main activity
         SharedPreferences sp = getSharedPreferences(Utils.SHAREDPREF, MODE_PRIVATE);
-        if(sp.getBoolean(Utils.LOGGED_IN,false))
-            startActivity(new Intent(this,MainActivity.class));
+        if(sp.getBoolean(Utils.LOGGED_IN,false)) {
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
+        }
 
         setContentView(R.layout.activity_sign_in);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -161,6 +164,9 @@ public class SignInActivity extends AppCompatActivity implements
                                     progressDialog.dismiss();
                                     //logged in so go to main activity
                                     ctx.startActivity(new Intent(SignInActivity.this, MainActivity.class));
+                                    User newUser = new User(authData.getProviderData().get("displayName").toString(), authData.getProviderData().get("profileImageURL").toString());
+                                    ref.child("/users/").child(authData.getUid()).setValue((newUser));
+                                    finish();
                                 }
                                 @Override
                                 public void onAuthenticationError(FirebaseError firebaseError) {
