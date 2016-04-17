@@ -3,7 +3,10 @@ package com.jevon.studentrollrecorder.service;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -11,6 +14,8 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.jevon.studentrollrecorder.MainActivity;
+import com.jevon.studentrollrecorder.R;
 import com.jevon.studentrollrecorder.pojo.Course;
 import com.jevon.studentrollrecorder.pojo.Lecture;
 import com.jevon.studentrollrecorder.pojo.Student;
@@ -104,6 +109,7 @@ public class IdCheckService extends Service {
             else {
                 Log.e(TAG, scanned_id + " not part of " + currentSession.toString());
                 Toast.makeText(getApplicationContext(), " not part of " + currentSession.toString(), Toast.LENGTH_LONG).show();
+                broadcastIntent();
             }
         }
         else{
@@ -139,6 +145,12 @@ public class IdCheckService extends Service {
     @Override
     public void onDestroy() {
         Log.e(TAG, "Service onDestroy");
+    }
+
+    public void broadcastIntent(){
+        Intent i = new Intent();
+        i.setAction("SHOW.SNACKBAR.ADD.STUDENT");
+        sendBroadcast(i);
     }
 
     //Actual session object

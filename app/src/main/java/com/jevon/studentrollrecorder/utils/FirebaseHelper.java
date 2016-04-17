@@ -52,7 +52,7 @@ public class FirebaseHelper {
         int hour = Utils.getCurrentHour();
         int minute = Utils.getCurrentMinute();
 
-        Attendee a = new Attendee(hour,minute,student_id);
+        Attendee a = new Attendee(hour,minute);
         ObjectMapper m = new ObjectMapper();
         Map<String, Object> attendeeMap = new HashMap<>();
 
@@ -62,7 +62,7 @@ public class FirebaseHelper {
         catch(Exception e){
             e.printStackTrace();
         }
-        ref_id.child(courseCode).child(Utils.SESSIONS).child(session_id).child("attendees").child(student_id).setValue(attendeeMap);
+        ref_id.child(courseCode).child(Utils.SESSIONS).child(session_id).child(Utils.ATTENDEES).child(student_id).setValue(attendeeMap);
     }
 
 }

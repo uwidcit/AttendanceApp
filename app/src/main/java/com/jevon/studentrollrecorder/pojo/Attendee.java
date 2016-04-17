@@ -5,15 +5,13 @@ package com.jevon.studentrollrecorder.pojo;
  */
 public class Attendee {
     int hr, min;
-    String id;
 
     public Attendee() {
     }
 
-    public Attendee(int hr, int min, String id) {
+    public Attendee(int hr, int min) {
         this.hr = hr;
         this.min = min;
-        this.id = id;
     }
 
     public int getHr() {
@@ -30,13 +28,5 @@ public class Attendee {
 
     public void setMin(int min) {
         this.min = min;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 }

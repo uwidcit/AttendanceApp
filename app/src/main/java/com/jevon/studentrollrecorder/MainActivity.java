@@ -1,14 +1,17 @@
 package com.jevon.studentrollrecorder;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -39,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean isBound;
     private static final String TAG = "Main";
     private Intent i;
+    private IntentFilter intentFilter;
 
     private ServiceConnection idCheckServiceConnection = new ServiceConnection() {
         @Override
@@ -65,6 +69,33 @@ public class MainActivity extends AppCompatActivity {
         setUpListView();
         TextView tv= (TextView)findViewById(R.id.textView);
         tv.setBackgroundResource(R.drawable.border_style);
+        intentFilter = new IntentFilter();
+        intentFilter.addAction("SHOW.SNACKBAR.ADD.STUDENT");
+        registerReceiver(mReceiver,intentFilter);
+    }
+
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Snackbar.make(findViewById(android.R.id.content),"Would you like to add this student to the system?",Snackbar.LENGTH_LONG)
+                    .setAction("Yes", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Log.i("ADDING","USER WILL BE ADDED TO FIREBASE!");
+                        }
+                    })
+                    .show();
+        }
+    };
+
+    public void onResume(){
+        super.onResume();
+        unregisterReceiver(mReceiver);
+    }
+
+    public void onPause(){
+        super.onPause();
+        registerReceiver(mReceiver,intentFilter);
     }
 
     @Override

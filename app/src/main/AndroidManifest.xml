@@ -59,6 +59,11 @@
             android:name=".ViewAnalyticsActivity"
             android:label="@string/title_activity_view_analytics"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <intent-filter>
+            <action android:name="SHOW.SNACKBAR.ADD.STUDENT">
+            </action>
+        </intent-filter>
     </application>
 
 </manifest>
