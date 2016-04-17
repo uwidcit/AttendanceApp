@@ -38,6 +38,8 @@ public class Course {
         return students;
     }
 
+    public HashMap<String,Session> getSessions(){return sessions;}
+
     public void setStudents(HashMap<String,Student> students) {
         this.students = students;
     }

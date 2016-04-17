@@ -1,5 +1,7 @@
 package com.jevon.studentrollrecorder.pojo;
 
+import java.util.HashMap;
+
 /**
  * Created by jevon on 14-Apr-16.
  */
@@ -7,20 +9,22 @@ package com.jevon.studentrollrecorder.pojo;
 /*Not really a session object. More of an entry of a student for a session. Class necessary for FB
     to map data*/
 public class Session{
-    String id;
+    HashMap<String, Attendee> attendees;
 
     public Session() {
     }
 
-    public Session(String id) {
-        this.id = id;
+    public Session(HashMap<String, Attendee> attendees) {
+//        attendees= new HashMap();
+        this.attendees = attendees;
+
     }
 
-    public String getId() {
-        return id;
+    public HashMap<String, Attendee> getAttendees() {
+        return attendees;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setAttendees(HashMap<String, Attendee> attendees) {
+        this.attendees = attendees;
     }
 }

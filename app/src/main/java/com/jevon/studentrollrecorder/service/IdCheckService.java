@@ -6,6 +6,7 @@ import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -24,6 +25,7 @@ import java.util.HashMap;
 * 2nd checks if there is a lecture at the moment
 * 3rd checks if the id scanned belongs to a student registered for the course
 * 4th marks the student present for the session*/
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class IdCheckService extends Service {
     private static final String TAG = "IdCheckService";
     private int currentHour;
@@ -79,6 +81,7 @@ public class IdCheckService extends Service {
                     markAsPresentInFirebase();
                 else
                     Toast.makeText(getApplicationContext(),"No courses found on your profile",Toast.LENGTH_LONG).show();
+                stopSelf();
             }
             @Override public void onCancelled(FirebaseError error) {
                 Log.e(TAG,"The read failed: " + error.getMessage());
@@ -96,6 +99,7 @@ public class IdCheckService extends Service {
                 Log.e(TAG, scanned_id + " present for "+ currentSession.toString());
                 FirebaseHelper fh = new FirebaseHelper();
                 fh.markAsPresent(currentSession.courseCode,currentSession.sessionID,scanned_id);
+                stopSelf();
             }
             else {
                 Log.e(TAG, scanned_id + " not part of " + currentSession.toString());
