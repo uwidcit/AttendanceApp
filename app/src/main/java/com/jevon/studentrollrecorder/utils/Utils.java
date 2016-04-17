@@ -17,6 +17,7 @@ public final class Utils {
     public static final String SESSIONS = "sessions";
     public static final String ID = "id";
     public static final String COURSES = "courses";
+    public static final String LECTURERS = "lecturers";
     public static final String LOGGED_IN = "loggedIN";
     public static final String SHAREDPREF = "rollrecPref";
     public static final String SCANNED_ID = "scannedID";
@@ -42,7 +43,7 @@ public final class Utils {
 
     public static int getCurrentHour(){
         Calendar c = Calendar.getInstance();
-        return c.get(Calendar.HOUR_OF_DAY);
+        return c.get(Calendar.MINUTE);
     }
 
     public static int getCurrentMinute(){

@@ -6,7 +6,7 @@
     <item
         android:id="@+id/action_add_sessions"
         android:orderInCategory="1"
-        android:title="Add Sessions"
+        android:title="Add Lectures"
         app:showAsAction="ifRoom" />
 
 

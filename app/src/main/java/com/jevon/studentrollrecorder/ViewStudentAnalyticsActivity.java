@@ -6,7 +6,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -63,10 +62,10 @@ public class ViewStudentAnalyticsActivity extends AppCompatActivity {
         /* create a new firebase helper. */
         FirebaseHelper firebaseHelper = new FirebaseHelper();
         /* get the root of the json tree. */
-        Firebase ref = firebaseHelper.getRef();
+        Firebase ref_id = firebaseHelper.getRef_id();
 
         /* construct a ref to narrow down to students for selected course.*/
-        Firebase studentsRef = ref.child(Utils.COURSES).child(firebaseHelper.getUID()).child(courseCode).child(Utils.STUDENTS);
+        Firebase studentsRef = ref_id.child(courseCode).child(Utils.STUDENTS);
 
         /* get a list of the students registered for this course from firebase and build an arraylist for display in listview */
         studentsRef.addValueEventListener(new ValueEventListener() {

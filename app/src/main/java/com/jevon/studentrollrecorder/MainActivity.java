@@ -90,12 +90,12 @@ public class MainActivity extends AppCompatActivity {
 
     public void onResume(){
         super.onResume();
-        unregisterReceiver(mReceiver);
+        registerReceiver(mReceiver,intentFilter);
     }
 
     public void onPause(){
         super.onPause();
-        registerReceiver(mReceiver,intentFilter);
+        unregisterReceiver(mReceiver);
     }
 
     @Override
@@ -171,6 +171,7 @@ public class MainActivity extends AppCompatActivity {
             SharedPreferences sp = getSharedPreferences(Utils.SHAREDPREF, MODE_PRIVATE);
             SharedPreferences.Editor spe = sp.edit();
             spe.putBoolean(Utils.LOGGED_IN,false);
+            spe.remove(Utils.ID);
             spe.apply();
             finish();
             startActivity(new Intent(MainActivity.this,SignInActivity.class));

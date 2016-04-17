@@ -1,8 +1,8 @@
 package com.jevon.studentrollrecorder.utils;
 
 import android.content.Context;
+import android.util.Log;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.firebase.client.Firebase;
 import com.jevon.studentrollrecorder.pojo.Attendee;
@@ -10,8 +10,6 @@ import com.jevon.studentrollrecorder.pojo.Course;
 import com.jevon.studentrollrecorder.pojo.Lecture;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,7 +24,7 @@ public class FirebaseHelper {
         MyApplication myApplication = MyApplication.getInstance();
         ref = myApplication.getRef();
         uid = myApplication.getSharedPreferences(Utils.SHAREDPREF, Context.MODE_PRIVATE).getString(Utils.ID,null);
-        ref_id = ref.child(Utils.COURSES).child(uid);
+        ref_id = ref.child(Utils.LECTURERS).child(uid);
     }
 
     public Firebase getRef(){ return ref;}
@@ -42,11 +40,14 @@ public class FirebaseHelper {
     public void addLectures(String courseCode, ArrayList<Lecture> lectures){
         ObjectMapper m = new ObjectMapper();
         Map<String,Object> sesMap = new HashMap<>();
-        for (Lecture s : lectures) {
+        for (Lecture l : lectures) {
                 try{
-                    sesMap = m.convertValue(s, HashMap.class);
+                    sesMap = m.convertValue(l, HashMap.class);
+                    ref_id.child(courseCode).child(Utils.LECTURES).child(l.getDay().substring(0,3)+" "+l.getStartHr()).setValue(sesMap);
+                    Log.e("FBH","added lecture");
                 }catch (IllegalArgumentException e){e.printStackTrace();}
-            ref_id.child(courseCode).child(Utils.LECTURES).push().setValue(sesMap);
+
+
         }
     }
 

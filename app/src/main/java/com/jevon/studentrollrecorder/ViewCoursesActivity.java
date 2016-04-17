@@ -53,10 +53,6 @@ public class ViewCoursesActivity extends AppCompatActivity {
         //TODO: get lecturer courses from DB
         courses = new ArrayList<>();
         getCourses();
-        if(courses.size() > 0)
-            Log.e("Courses", courses.get(0).toString());
-        else
-            Log.e("Courses", "courses is empty");
         adapter = new ArrayAdapter<>(ViewCoursesActivity.this,R.layout.layout_listview_item_lg,courses);
         lv_courses.setAdapter(adapter);
 

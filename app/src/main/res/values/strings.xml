@@ -19,7 +19,7 @@
     </string-array>
 
     <string-array name="course_info_list">
-        <item>View Course Sessions</item>
+        <item>View Course Lectures</item>
         <item>View Course Analytics</item>
         <item>View Student Analytics</item>
     </string-array>

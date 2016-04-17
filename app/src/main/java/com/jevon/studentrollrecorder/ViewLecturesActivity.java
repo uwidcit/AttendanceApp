@@ -49,17 +49,18 @@ public class ViewLecturesActivity extends AppCompatActivity {
         lv_view_sessions = (ListView) findViewById(R.id.lv_view_sessions);
         lectures = new ArrayList<>();
         adapter = new ArrayAdapter<>(ViewLecturesActivity.this,R.layout.layout_listview_item_lg, lectures);
-        getSessions();
+        getLectures();
         lv_view_sessions.setAdapter(adapter);
     }
 
-    public void getSessions(){
+    public void getLectures(){
         FirebaseHelper fh = new FirebaseHelper();
         Firebase ref_ses = fh.getRef_id().child(courseCode).child(Utils.LECTURES);
         ref_ses.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 adapter.clear();
+                Log.e("snapshot", snapshot.toString());
                 for (DataSnapshot lectSnapshot: snapshot.getChildren()){
                     Lecture s = lectSnapshot.getValue(Lecture.class);
                     Log.e("Course received", s.toString());
