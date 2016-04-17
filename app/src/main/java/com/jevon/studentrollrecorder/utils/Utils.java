@@ -43,6 +43,11 @@ public final class Utils {
         return c.get(Calendar.HOUR_OF_DAY);
     }
 
+    public static int getCurrentMinute(){
+        Calendar c = Calendar.getInstance();
+        return c.get(Calendar.MINUTE);
+    }
+
     public static String getCurrDay(){
         Calendar c = Calendar.getInstance();
         return c.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault());
