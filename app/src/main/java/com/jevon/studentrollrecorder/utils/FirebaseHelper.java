@@ -29,6 +29,8 @@ public class FirebaseHelper {
         ref_id = ref.child(Utils.COURSES).child(uid);
     }
 
+    public Firebase getRef(){ return ref;}
+
     public Firebase getRef_id() {
         return ref_id;
     }
@@ -65,4 +67,7 @@ public class FirebaseHelper {
         ref_id.child(courseCode).child(Utils.SESSIONS).child(session_id).child("attendees").child(student_id).setValue(attendeeMap);
     }
 
+    public String getUID(){
+        return this.uid;
+    }
 }

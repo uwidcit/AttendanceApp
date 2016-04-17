@@ -24,5 +24,7 @@
         <item>View Student Analytics</item>
     </string-array>
     <string name="title_activity_view_student_analytics">ViewStudentAnalyticsActivity</string>
+    <string name="title_activity_view_individual_student_analytics">ViewIndividualStudentAnalytics
+    </string>
 
 </resources>

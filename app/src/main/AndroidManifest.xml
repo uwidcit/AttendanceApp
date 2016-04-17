@@ -66,6 +66,10 @@
         <activity
             android:name=".ViewStudentAnalyticsActivity"
             android:label="@string/title_activity_view_student_analytics"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ViewIndividualStudentAnalytics"
+            android:label="@string/title_activity_view_individual_student_analytics"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
