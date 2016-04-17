@@ -20,6 +20,7 @@ public final class Utils {
     public static final String LOGGED_IN = "loggedIN";
     public static final String SHAREDPREF = "rollrecPref";
     public static final String SCANNED_ID = "scannedID";
+    public static final String STUDENTS = "students";
     public static final String ATTENDEES="attendees";
 
     public static String formatTime(int hour, int minute){
