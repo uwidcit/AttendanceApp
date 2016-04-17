@@ -53,11 +53,19 @@
         <service
             android:name=".service.IdCheckService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
 
         <activity
             android:name=".ViewAnalyticsActivity"
             android:label="@string/title_activity_view_analytics"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ViewCourseInfoActivity"
+            android:label="@string/title_activity_view_course_info"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ViewStudentAnalyticsActivity"
+            android:label="@string/title_activity_view_student_analytics"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

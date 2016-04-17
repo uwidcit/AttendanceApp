@@ -63,7 +63,7 @@ public class ViewCoursesActivity extends AppCompatActivity {
         lv_courses.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent i = new Intent(ViewCoursesActivity.this,ViewLecturesActivity.class);
+                Intent i = new Intent(ViewCoursesActivity.this,ViewCourseInfoActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putString(Utils.COURSE_CODE,courses.get(position).getCourseCode());
                 bundle.putString(Utils.COURSE_NAME,courses.get(position).getCourseName());
