@@ -26,5 +26,6 @@
     <string name="title_activity_view_student_analytics">ViewStudentAnalyticsActivity</string>
     <string name="title_activity_view_individual_student_analytics">ViewIndividualStudentAnalytics
     </string>
+    <string name="title_activity_add_student_to_system">AddStudentToSystem</string>
 
 </resources>

@@ -28,6 +28,7 @@ import android.widget.Toast;
 import com.jevon.studentrollrecorder.pojo.Student;
 import com.jevon.studentrollrecorder.service.IdCheckService;
 import com.jevon.studentrollrecorder.service.IdServiceBinder;
+import com.jevon.studentrollrecorder.utils.AddStudentToSystem;
 import com.jevon.studentrollrecorder.utils.Utils;
 
 import java.util.ArrayList;
@@ -43,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "Main";
     private Intent i;
     private IntentFilter intentFilter;
+    private String studentIDScanned="813117961";
 
     private ServiceConnection idCheckServiceConnection = new ServiceConnection() {
         @Override
@@ -72,6 +74,10 @@ public class MainActivity extends AppCompatActivity {
         intentFilter = new IntentFilter();
         intentFilter.addAction("SHOW.SNACKBAR.ADD.STUDENT");
         registerReceiver(mReceiver,intentFilter);
+//        forcing a broadcast to be broadcasted
+//        Intent i = new Intent();
+//        i.setAction("SHOW.SNACKBAR.ADD.STUDENT");
+//        sendBroadcast(i);
     }
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -81,7 +87,14 @@ public class MainActivity extends AppCompatActivity {
                     .setAction("Yes", new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            Log.i("ADDING","USER WILL BE ADDED TO FIREBASE!");
+                            if(studentIDScanned!=null){
+                                Intent intent = new Intent(MainActivity.this, AddStudentToSystem.class);
+                                Bundle bundle = new Bundle();
+                                bundle.putString("userid",studentIDScanned);
+                                intent.putExtras(bundle);
+                                startActivity(intent);
+                            }
+
                         }
                     })
                     .show();
@@ -127,6 +140,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_SCANNER && resultCode == RESULT_OK) {
             String results = data.getStringExtra("results");
+            studentIDScanned=results;
             Log.e(TAG,"scanned: "+results);
             if(!isBound)
                 bindService(i, idCheckServiceConnection, Context.BIND_AUTO_CREATE);
