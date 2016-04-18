@@ -1,4 +1,4 @@
-package com.jevon.studentrollrecorder.utils;
+package com.jevon.studentrollrecorder;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,7 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Toast;
 
-import com.jevon.studentrollrecorder.R;
+import com.jevon.studentrollrecorder.utils.Utils;
 
 public class AddStudentToSystem extends AppCompatActivity {
 
@@ -30,9 +30,8 @@ public class AddStudentToSystem extends AppCompatActivity {
         });
 
         Intent i = getIntent();
-        Bundle extras = i.getExtras();
-
-        String id = extras.getString("userid");
+        //@shiva please use constants from utils and dont be afraid to as your own. LOL
+        String id = i.getStringExtra(Utils.SCANNED_ID);
         Toast.makeText(this,"ID IS"+id,Toast.LENGTH_LONG).show();
     }
 

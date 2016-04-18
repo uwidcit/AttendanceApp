@@ -28,7 +28,6 @@ import android.widget.Toast;
 import com.jevon.studentrollrecorder.pojo.Student;
 import com.jevon.studentrollrecorder.service.IdCheckService;
 import com.jevon.studentrollrecorder.service.IdServiceBinder;
-import com.jevon.studentrollrecorder.utils.AddStudentToSystem;
 import com.jevon.studentrollrecorder.utils.Utils;
 
 import java.util.ArrayList;
@@ -89,12 +88,9 @@ public class MainActivity extends AppCompatActivity {
                         public void onClick(View view) {
                             if(studentIDScanned!=null){
                                 Intent intent = new Intent(MainActivity.this, AddStudentToSystem.class);
-                                Bundle bundle = new Bundle();
-                                bundle.putString("userid",studentIDScanned);
-                                intent.putExtras(bundle);
+                                intent.putExtra(Utils.SCANNED_ID,studentIDScanned);
                                 startActivity(intent);
                             }
-
                         }
                     })
                     .show();
