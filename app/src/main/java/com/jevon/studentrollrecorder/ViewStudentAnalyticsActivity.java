@@ -61,7 +61,7 @@ public class ViewStudentAnalyticsActivity extends AppCompatActivity {
 
         /* create a new firebase helper. */
         FirebaseHelper firebaseHelper = new FirebaseHelper();
-        /* get the root of the json tree. */
+        /* get the json tree from courses/lecturer id . */
         Firebase ref_id = firebaseHelper.getRef_id();
 
         /* construct a ref to narrow down to students for selected course.*/

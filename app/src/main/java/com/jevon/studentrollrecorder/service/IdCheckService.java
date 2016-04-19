@@ -31,7 +31,6 @@ public class IdCheckService extends Service {
     private static final String TAG = "IdCheckService";
     private int currentHour;
     private String today;
-    private LectureSession currentSession;
     private String scanned_id;
     private ArrayList<Course> courses;
 
@@ -45,7 +44,7 @@ public class IdCheckService extends Service {
         Log.e(TAG, "running service for "+ student_id);
         currentHour = Utils.getCurrentHour();
         today = Utils.getCurrDay();
-        Log.e(TAG, "today: " + today);
+        Log.e(TAG, "today: " + today+"hr: "+currentHour);
         scanned_id = student_id;
         courses = new ArrayList<>();
         getCourses();
@@ -54,14 +53,17 @@ public class IdCheckService extends Service {
     //gets course code of and an ID for course going on at the moment, null otherwise
     private LectureSession getCurrentSession(){
         LectureSession currSession = null;
+        Log.e(TAG, "get session - # courses: "+courses.size());
         for(Course c: courses){
             HashMap<String,Lecture> lectures = c.getLecturess();
             if(lectures!=null)
                 for (Lecture lecture : lectures.values()) {
-                    if(currentHour >= lecture.getStartHr() && currentHour < lecture.getEndHr() && lecture.getDay().equals(today)){
+                    if(currentHour >= lecture.getStartHr() && currentHour < lecture.getEndHr() && lecture.getDay().equalsIgnoreCase(today)){
                         currSession = new LectureSession( c.getCourseCode(), Utils.getIDTimeStamp(lecture.getStartHr()) );
                     }
                 }
+            else
+                Log.e(TAG,"no lectures for "+c.getCourseCode());
         }
         return currSession;
     }
@@ -82,7 +84,7 @@ public class IdCheckService extends Service {
                     markAsPresentInFirebase();
                 else
                     Toast.makeText(getApplicationContext(),"No courses found on your profile",Toast.LENGTH_LONG).show();
-                stopSelf();
+//                stopSelf();
             }
             @Override public void onCancelled(FirebaseError error) {
                 Log.e(TAG,"The read failed: " + error.getMessage());
@@ -90,16 +92,17 @@ public class IdCheckService extends Service {
         });
     }
 
+
     /*If there is a lecture scheduled for now and the student is registered for the course record him/her as present*/
     private void markAsPresentInFirebase(){
-        currentSession = getCurrentSession();
-        if(currentSession!=null){
+        LectureSession currentSession = getCurrentSession();
+        if(currentSession !=null){
             Log.e(TAG, "current session: " + currentSession.toString());
             //we have a class now so check if student is in that class
             if(isRegistered(scanned_id, currentSession.courseCode)){
                 Log.e(TAG, scanned_id + " present for "+ currentSession.toString());
                 FirebaseHelper fh = new FirebaseHelper();
-                fh.markAsPresent(currentSession.courseCode,currentSession.sessionID,scanned_id);
+                fh.markAsPresent(currentSession.courseCode, currentSession.sessionID,scanned_id);
             }
             else {
                 Log.e(TAG, scanned_id + " not part of " + currentSession.toString());

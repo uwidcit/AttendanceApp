@@ -65,6 +65,7 @@ public class FirebaseHelper {
         catch(Exception e){
             e.printStackTrace();
         }
+        ref_id.child(courseCode).child(Utils.SESSIONS).child(session_id).child(Utils.DATE).setValue(session_id);
         ref_id.child(courseCode).child(Utils.SESSIONS).child(session_id).child(Utils.ATTENDEES).child(student_id).setValue(attendeeMap);
     }
 
