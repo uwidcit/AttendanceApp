@@ -83,18 +83,18 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, final Intent intent) {
             if (studentIDScanned != null) {
-                Snackbar.make(findViewById(android.R.id.content), "Would you like to add this student to the system?", Snackbar.LENGTH_LONG)
+                Snackbar.make(findViewById(android.R.id.content), "Would you like to add this student to the system?", Snackbar.LENGTH_INDEFINITE)
                         .setAction("Yes", new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 Bundle receivedData = intent.getExtras();
                                 Bundle bundle = new Bundle();
-                                bundle.putString("userId", studentIDScanned);
+                                bundle.putString("userID", studentIDScanned);
                                 bundle.putString("courseCode", receivedData.get("courseCode").toString());
                                 bundle.putString("sessionID", receivedData.get("sessionID").toString());
                                 Intent addStudentIntent = new Intent(MainActivity.this, AddStudentToSystem.class);
                                 addStudentIntent.putExtras(bundle);
-                                startActivity(intent);
+                                startActivity(addStudentIntent);
                             }
                         })
                         .show();

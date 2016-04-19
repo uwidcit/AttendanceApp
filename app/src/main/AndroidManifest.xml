@@ -83,7 +83,8 @@
         <activity
             android:name=".AddStudentToSystem"
             android:label="@string/title_activity_add_student_to_system"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
     </application>
 
 </manifest>

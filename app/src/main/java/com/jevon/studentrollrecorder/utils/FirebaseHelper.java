@@ -69,7 +69,7 @@ public class FirebaseHelper {
         ref_id.child(courseCode).child(Utils.SESSIONS).child(session_id).child(Utils.ATTENDEES).child(student_id).setValue(attendeeMap);
     }
 
-    public void addStudentToClass(String courseCode, String studentName, String studentID, String teacherID){
+    public void addStudentToClass(String courseCode, String studentName, String studentID){
         Student student = new Student(studentID,studentName);
         ObjectMapper m = new ObjectMapper();
         Map<String, Object> studentMap = new HashMap<>();
@@ -80,8 +80,7 @@ public class FirebaseHelper {
         catch (Exception e){
             e.printStackTrace();
         }
-
-        ref_id.child(teacherID).child(courseCode).child(Utils.STUDENTS).child(studentID).setValue(studentMap);
+        ref_id.child(courseCode).child(Utils.STUDENTS).child(studentID).setValue(studentMap);
     }
 
     public String getUID(){
