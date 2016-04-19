@@ -10,6 +10,8 @@ import java.util.HashMap;
     to map data*/
 public class Session{
     HashMap<String, Attendee> attendees;
+    String date;
+
 
     public Session() {
     }
@@ -17,6 +19,7 @@ public class Session{
     public Session(HashMap<String, Attendee> attendees) {
 //        attendees= new HashMap();
         this.attendees = attendees;
+        this.date = "";
 
     }
 
