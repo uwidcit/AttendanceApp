@@ -12,4 +12,31 @@
     tools:context=".AddStudentToSystem"
     tools:showIn="@layout/activity_add_student_to_system">
 
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="StudentID"
+        android:id="@+id/tv_studentIDField"
+        android:layout_gravity="center_vertical" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="813117961"
+        android:id="@+id/tv_studentIDValue"
+        android:layout_centerHorizontal="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/et_StudentName"
+        android:layout_below="@+id/tv_studentIDField"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="42dp"
+        android:layout_toStartOf="@+id/tv_studentIDValue" />
+
+
 </RelativeLayout>

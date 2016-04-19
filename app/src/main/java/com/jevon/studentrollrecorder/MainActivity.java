@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "Main";
     private Intent i;
     private IntentFilter intentFilter;
-    private String studentIDScanned="813117961";
+    private String studentIDScanned=null;
 
     private ServiceConnection idCheckServiceConnection = new ServiceConnection() {
         @Override
@@ -81,19 +81,24 @@ public class MainActivity extends AppCompatActivity {
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
-        public void onReceive(Context context, Intent intent) {
-            Snackbar.make(findViewById(android.R.id.content),"Would you like to add this student to the system?",Snackbar.LENGTH_LONG)
-                    .setAction("Yes", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            if(studentIDScanned!=null){
-                                Intent intent = new Intent(MainActivity.this, AddStudentToSystem.class);
-                                intent.putExtra(Utils.SCANNED_ID,studentIDScanned);
-                                startActivity(intent);
+        public void onReceive(Context context, final Intent intent) {
+            if (studentIDScanned != null) {
+                Snackbar.make(findViewById(android.R.id.content), "Would you like to add this student to the system?", Snackbar.LENGTH_INDEFINITE)
+                        .setAction("Yes", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Bundle receivedData = intent.getExtras();
+                                Bundle bundle = new Bundle();
+                                bundle.putString("userID", studentIDScanned);
+                                bundle.putString("courseCode", receivedData.get("courseCode").toString());
+                                bundle.putString("sessionID", receivedData.get("sessionID").toString());
+                                Intent addStudentIntent = new Intent(MainActivity.this, AddStudentToSystem.class);
+                                addStudentIntent.putExtras(bundle);
+                                startActivity(addStudentIntent);
                             }
-                        }
-                    })
-                    .show();
+                        })
+                        .show();
+            }
         }
     };
 
@@ -180,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
         else if (id == R.id.action_log_out) {
             SharedPreferences sp = getSharedPreferences(Utils.SHAREDPREF, MODE_PRIVATE);
             SharedPreferences.Editor spe = sp.edit();
-            spe.putBoolean(Utils.LOGGED_IN,false);
+            spe.putBoolean(Utils.LOGGED_IN, false);
             spe.remove(Utils.ID);
             spe.apply();
             finish();
