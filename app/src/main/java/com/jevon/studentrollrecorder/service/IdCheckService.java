@@ -103,6 +103,7 @@ public class IdCheckService extends Service {
                 Log.e(TAG, scanned_id + " present for "+ currentSession.toString());
                 FirebaseHelper fh = new FirebaseHelper();
                 fh.markAsPresent(currentSession.courseCode, currentSession.sessionID,scanned_id);
+
             }
             else {
                 Log.e(TAG, scanned_id + " not part of " + currentSession.toString());

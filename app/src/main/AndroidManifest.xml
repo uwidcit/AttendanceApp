@@ -78,6 +78,7 @@
 
         <intent-filter>
             <action android:name="SHOW.SNACKBAR.ADD.STUDENT"></action>
+            <action android:name="ADD.STUDENT.TO.LISTVIEW"></action>
         </intent-filter>
 
         <activity

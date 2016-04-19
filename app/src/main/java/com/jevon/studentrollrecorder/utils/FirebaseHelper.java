@@ -1,7 +1,9 @@
 package com.jevon.studentrollrecorder.utils;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.util.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,9 +23,10 @@ import java.util.Map;
 public class FirebaseHelper {
     private String uid;
     private Firebase ref, ref_id;
+    private MyApplication myApplication;
 
     public FirebaseHelper(){
-        MyApplication myApplication = MyApplication.getInstance();
+        myApplication = MyApplication.getInstance();
         ref = myApplication.getRef();
         uid = myApplication.getSharedPreferences(Utils.SHAREDPREF, Context.MODE_PRIVATE).getString(Utils.ID,null);
         ref_id = ref.child(Utils.LECTURERS).child(uid);
@@ -67,6 +70,7 @@ public class FirebaseHelper {
         }
         ref_id.child(courseCode).child(Utils.SESSIONS).child(session_id).child(Utils.DATE).setValue(session_id);
         ref_id.child(courseCode).child(Utils.SESSIONS).child(session_id).child(Utils.ATTENDEES).child(student_id).setValue(attendeeMap);
+        broadcastIntent(student_id);
     }
 
     public void addStudentToClass(String courseCode, String studentName, String studentID){
@@ -85,5 +89,15 @@ public class FirebaseHelper {
 
     public String getUID(){
         return this.uid;
+    }
+
+    public void broadcastIntent(String studentId){
+        Intent i = new Intent();
+        i.setAction("ADD.STUDENT.TO.LISTVIEW");
+        Bundle b = new Bundle();
+        b.putString(Utils.ID,studentId);
+        i.putExtras(b);
+        Context c = myApplication.getApplicationContext();
+        c.sendBroadcast(i);
     }
 }
