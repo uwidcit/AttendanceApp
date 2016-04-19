@@ -9,7 +9,46 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.jevon.studentrollrecorder.utils.AddStudentToSystem"
+    tools:context=".AddStudentToSystem"
     tools:showIn="@layout/activity_add_student_to_system">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="StudentID"
+        android:id="@+id/tv_studentIDField"
+        android:layout_gravity="center_vertical" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="813117961"
+        android:id="@+id/tv_studentIDValue"
+        android:layout_above="@+id/view"
+        android:layout_centerHorizontal="true" />
+
+    <com.github.florent37.materialtextfield.MaterialTextField
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:mtf_image="@drawable/ic_tag"
+        android:layout_below="@+id/tv_studentIDField"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="21dp"
+        android:id="@+id/view">
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:text="Name"
+            android:ems="10"
+            android:id="@+id/et_StudentName"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="79dp"
+            android:hint="Enter Student's Name"/>
+    </com.github.florent37.materialtextfield.MaterialTextField>
 
 </RelativeLayout>

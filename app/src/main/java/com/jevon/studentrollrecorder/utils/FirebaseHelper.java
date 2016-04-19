@@ -1,6 +1,7 @@
 package com.jevon.studentrollrecorder.utils;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,6 +9,7 @@ import com.firebase.client.Firebase;
 import com.jevon.studentrollrecorder.pojo.Attendee;
 import com.jevon.studentrollrecorder.pojo.Course;
 import com.jevon.studentrollrecorder.pojo.Lecture;
+import com.jevon.studentrollrecorder.pojo.Student;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,8 +48,6 @@ public class FirebaseHelper {
                     ref_id.child(courseCode).child(Utils.LECTURES).child(l.getDay().substring(0,3)+" "+l.getStartHr()).setValue(sesMap);
                     Log.e("FBH","added lecture");
                 }catch (IllegalArgumentException e){e.printStackTrace();}
-
-
         }
     }
 
@@ -66,6 +66,21 @@ public class FirebaseHelper {
             e.printStackTrace();
         }
         ref_id.child(courseCode).child(Utils.SESSIONS).child(session_id).child(Utils.ATTENDEES).child(student_id).setValue(attendeeMap);
+    }
+
+    public void addStudentToClass(String courseCode, String studentName, String studentID, String teacherID){
+        Student student = new Student(studentID,studentName);
+        ObjectMapper m = new ObjectMapper();
+        Map<String, Object> studentMap = new HashMap<>();
+
+        try{
+            studentMap = m.convertValue(student, HashMap.class);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+        ref_id.child(teacherID).child(courseCode).child(Utils.STUDENTS).child(studentID).setValue(studentMap);
     }
 
     public String getUID(){

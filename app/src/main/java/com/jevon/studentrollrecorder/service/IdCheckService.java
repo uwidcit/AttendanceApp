@@ -2,6 +2,7 @@ package com.jevon.studentrollrecorder.service;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
@@ -103,7 +104,7 @@ public class IdCheckService extends Service {
             else {
                 Log.e(TAG, scanned_id + " not part of " + currentSession.toString());
                 Toast.makeText(getApplicationContext(), " not part of " + currentSession.toString(), Toast.LENGTH_LONG).show();
-                broadcastIntent();
+                broadcastIntent(currentSession);
             }
         }
         else{
@@ -142,8 +143,12 @@ public class IdCheckService extends Service {
         Log.e(TAG, "Service onDestroy");
     }
 
-    public void broadcastIntent(){
+    public void broadcastIntent(LectureSession currentSession){
         Intent i = new Intent();
+        Bundle bundle = new Bundle();
+        bundle.putString("courseCode",currentSession.courseCode);
+        bundle.putString("sessionID",currentSession.sessionID);
+        i.putExtras(bundle);
         i.setAction("SHOW.SNACKBAR.ADD.STUDENT");
         sendBroadcast(i);
     }

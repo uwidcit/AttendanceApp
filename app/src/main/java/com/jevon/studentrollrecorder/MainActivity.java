@@ -28,7 +28,6 @@ import android.widget.Toast;
 import com.jevon.studentrollrecorder.pojo.Student;
 import com.jevon.studentrollrecorder.service.IdCheckService;
 import com.jevon.studentrollrecorder.service.IdServiceBinder;
-import com.jevon.studentrollrecorder.utils.AddStudentToSystem;
 import com.jevon.studentrollrecorder.utils.Utils;
 
 import java.util.ArrayList;
@@ -44,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "Main";
     private Intent i;
     private IntentFilter intentFilter;
-    private String studentIDScanned="813117961";
+    private String studentIDScanned=null;
 
     private ServiceConnection idCheckServiceConnection = new ServiceConnection() {
         @Override
@@ -82,22 +81,24 @@ public class MainActivity extends AppCompatActivity {
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
-        public void onReceive(Context context, Intent intent) {
-            Snackbar.make(findViewById(android.R.id.content),"Would you like to add this student to the system?",Snackbar.LENGTH_LONG)
-                    .setAction("Yes", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            if(studentIDScanned!=null){
-                                Intent intent = new Intent(MainActivity.this, AddStudentToSystem.class);
+        public void onReceive(Context context, final Intent intent) {
+            if (studentIDScanned != null) {
+                Snackbar.make(findViewById(android.R.id.content), "Would you like to add this student to the system?", Snackbar.LENGTH_LONG)
+                        .setAction("Yes", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Bundle receivedData = intent.getExtras();
                                 Bundle bundle = new Bundle();
-                                bundle.putString("userid",studentIDScanned);
-                                intent.putExtras(bundle);
+                                bundle.putString("userId", studentIDScanned);
+                                bundle.putString("courseCode", receivedData.get("courseCode").toString());
+                                bundle.putString("sessionID", receivedData.get("sessionID").toString());
+                                Intent addStudentIntent = new Intent(MainActivity.this, AddStudentToSystem.class);
+                                addStudentIntent.putExtras(bundle);
                                 startActivity(intent);
                             }
-
-                        }
-                    })
-                    .show();
+                        })
+                        .show();
+            }
         }
     };
 
@@ -184,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
         else if (id == R.id.action_log_out) {
             SharedPreferences sp = getSharedPreferences(Utils.SHAREDPREF, MODE_PRIVATE);
             SharedPreferences.Editor spe = sp.edit();
-            spe.putBoolean(Utils.LOGGED_IN,false);
+            spe.putBoolean(Utils.LOGGED_IN, false);
             spe.remove(Utils.ID);
             spe.apply();
             finish();
