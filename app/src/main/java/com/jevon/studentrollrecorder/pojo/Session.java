@@ -30,4 +30,8 @@ public class Session{
     public void setAttendees(HashMap<String, Attendee> attendees) {
         this.attendees = attendees;
     }
+
+    public String getDate(){
+        return date;
+    }
 }

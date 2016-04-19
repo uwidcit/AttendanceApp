@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -13,6 +14,7 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -21,11 +23,17 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+import com.github.mikephil.charting.renderer.DataRenderer;
 import com.jevon.studentrollrecorder.pojo.Session;
+import com.jevon.studentrollrecorder.pojo.SortByDate;
 import com.jevon.studentrollrecorder.utils.FirebaseHelper;
 import com.jevon.studentrollrecorder.utils.Utils;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Locale;
 
 public class StudentAttendanceActivity extends AppCompatActivity implements OnChartValueSelectedListener{
 
@@ -84,7 +92,6 @@ public class StudentAttendanceActivity extends AppCompatActivity implements OnCh
 
                 // we set up the line chart after we have received the number of students in the course
                 setUpLineChart();
-                // now attempt
                 getSessions();
             }
 
@@ -108,7 +115,21 @@ public class StudentAttendanceActivity extends AppCompatActivity implements OnCh
                     Session temp = sesSnapshot.getValue(Session.class);
                     sessions.add(temp);
                 }
+
+//                new Thread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        populateLineChart();
+//                        lineChart.post(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                lineChart.invalidate();
+//                            }
+//                        });
+//                    }
+//                }).start();
                 populateLineChart();
+
                 sessions.clear();
             }
 
@@ -125,7 +146,7 @@ public class StudentAttendanceActivity extends AppCompatActivity implements OnCh
 
         for(Session s : sessions){
             // add label of string version of date of this session
-            labels.add("test" + String.valueOf(xCord));
+            labels.add(s.getDate());
 
             // add entry indicating number of students present at each session
             entries.add(new Entry((float)s.getAttendees().size(), xCord++));
@@ -137,12 +158,18 @@ public class StudentAttendanceActivity extends AppCompatActivity implements OnCh
         entries = new ArrayList<>();
         labels = new ArrayList<>();
 
+        Collections.sort(sessions, new SortByDate());
+
         createEntries();
 
         LineDataSet dataset = new LineDataSet(entries, "Number of Students Present");
+        dataset.setDrawCircles(true);
+        dataset.setDrawCubic(true);
+        dataset.setColor(Color.BLUE);
+        dataset.setCircleColor(Color.RED);
 
         LineData data = new LineData(labels, dataset);
-        data.setValueTextColor(Color.WHITE);
+        data.setValueTextColor(Color.BLUE);
 
         data.notifyDataChanged();
 
@@ -152,7 +179,8 @@ public class StudentAttendanceActivity extends AppCompatActivity implements OnCh
         lineChart.notifyDataSetChanged();
 
         // refresh chart
-        lineChart.invalidate();
+        lineChart.animateXY(1000,1000);
+        //lineChart.invalidate();
     }
 
     private void setUpLineChart(){
@@ -163,6 +191,7 @@ public class StudentAttendanceActivity extends AppCompatActivity implements OnCh
         lineChart.setNoDataTextDescription("No Student Attendance Data Available.");
         // descriptive text that appears in the bottom right corner of the chart
         lineChart.setDescription("Student Attendance");
+        lineChart.setDescriptionColor(Color.WHITE);
 
         // enable touch gestures
         lineChart.setTouchEnabled(true);
@@ -177,13 +206,21 @@ public class StudentAttendanceActivity extends AppCompatActivity implements OnCh
         lineChart.setPinchZoom(true);
 
         // set an alternative background color
-        lineChart.setBackgroundColor(Color.GRAY);
+        lineChart.setBackgroundColor(Color.BLACK);
 
         LineData data = new LineData();
-        data.setValueTextColor(Color.WHITE);
+        data.setValueTextColor(Color.GREEN);
 
         // add empty data
         lineChart.setData(data);
+
+        // get the legend
+        Legend legend = lineChart.getLegend();
+
+        // modify the legend
+        legend.setPosition(Legend.LegendPosition.BELOW_CHART_LEFT);
+        legend.setForm(Legend.LegendForm.SQUARE);
+        legend.setTextColor(Color.WHITE);
 
         // set up Y axis
 
@@ -192,10 +229,14 @@ public class StudentAttendanceActivity extends AppCompatActivity implements OnCh
         leftAxis.setAxisMaxValue((float)numStudents);
         leftAxis.setAxisMinValue(0f);
         leftAxis.setDrawGridLines(true);
+        leftAxis.setTextColor(Color.WHITE);
 
         // indicate the number of students registered for course as a line on the y axis
         LimitLine maxStudents = new LimitLine((float)(numStudents), "# registered");
         maxStudents.setLineColor(Color.RED);
+        maxStudents.setTextColor(Color.RED);
+        maxStudents.setLabelPosition(LimitLine.LimitLabelPosition.LEFT_BOTTOM);
+        maxStudents.setTextSize(5);
         leftAxis.addLimitLine(maxStudents);
 
         YAxis rightAxis = lineChart.getAxisRight();
@@ -204,7 +245,7 @@ public class StudentAttendanceActivity extends AppCompatActivity implements OnCh
 
         // set up X axis
         XAxis xl = lineChart.getXAxis();
-        xl.setTextColor(Color.BLUE);
+        xl.setTextColor(Color.WHITE);
         xl.setDrawGridLines(true);
         xl.setAvoidFirstLastClipping(true);
         xl.setSpaceBetweenLabels(5);
