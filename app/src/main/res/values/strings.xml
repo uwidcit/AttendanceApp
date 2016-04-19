@@ -11,6 +11,7 @@
     <string name="title_activity_view_lectures">Lectures</string>
     <string name="title_activity_view_analytics">ViewAnalyticsActivity</string>
     <string name="title_activity_view_course_info">ViewCourseInfoActivity</string>
+    <string name="title_activity_student_attendance">StudentAttendanceActivity</string>
 
     <string-array name="course_analytics_list">
         <item>Student Attendance</item>
@@ -26,5 +27,6 @@
     <string name="title_activity_view_student_analytics">ViewStudentAnalyticsActivity</string>
     <string name="title_activity_view_individual_student_analytics">ViewIndividualStudentAnalytics
     </string>
+    <string name="title_activity_add_student_to_system">AddStudentToSystem</string>
 
 </resources>
