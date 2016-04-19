@@ -179,7 +179,7 @@ public class StudentAttendanceActivity extends AppCompatActivity implements OnCh
         lineChart.notifyDataSetChanged();
 
         // refresh chart
-        lineChart.animateXY(1000,1000);
+        lineChart.animateXY(2000,2000);
         //lineChart.invalidate();
     }
 
