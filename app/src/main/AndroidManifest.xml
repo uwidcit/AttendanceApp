@@ -73,13 +73,15 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <intent-filter>
-            <action android:name="SHOW.SNACKBAR.ADD.STUDENT" />
+            <action android:name="SHOW.SNACKBAR.ADD.STUDENT"></action>
+            <action android:name="ADD.STUDENT.TO.LISTVIEW"></action>
         </intent-filter>
 
         <activity
             android:name=".AddStudentToSystem"
             android:label="@string/title_activity_add_student_to_system"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
     </application>
 
 </manifest>

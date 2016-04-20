@@ -36,8 +36,8 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_SCANNER = 1;
     private static final int PERMISSION_CAMERA = 2;
     private ListView lv_present_students;
-    private ArrayList<Student> students;
-    private ArrayAdapter<Student> adapter;
+    private ArrayList<String> students;
+    private ArrayAdapter<String> adapter;
     private IdCheckService idCheckService;
     private boolean isBound;
     private static final String TAG = "Main";
@@ -73,31 +73,36 @@ public class MainActivity extends AppCompatActivity {
         intentFilter = new IntentFilter();
         intentFilter.addAction("SHOW.SNACKBAR.ADD.STUDENT");
         registerReceiver(mReceiver,intentFilter);
-//        forcing a broadcast to be broadcasted
-//        Intent i = new Intent();
-//        i.setAction("SHOW.SNACKBAR.ADD.STUDENT");
-//        sendBroadcast(i);
     }
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, final Intent intent) {
-            if (studentIDScanned != null) {
-                Snackbar.make(findViewById(android.R.id.content), "Would you like to add this student to the system?", Snackbar.LENGTH_INDEFINITE)
-                        .setAction("Yes", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                Bundle receivedData = intent.getExtras();
-                                Bundle bundle = new Bundle();
-                                bundle.putString("userID", studentIDScanned);
-                                bundle.putString("courseCode", receivedData.get("courseCode").toString());
-                                bundle.putString("sessionID", receivedData.get("sessionID").toString());
-                                Intent addStudentIntent = new Intent(MainActivity.this, AddStudentToSystem.class);
-                                addStudentIntent.putExtras(bundle);
-                                startActivity(addStudentIntent);
-                            }
-                        })
-                        .show();
+
+            if (intent.getAction().equals("SHOW.SNACKBAR.ADD.STUDENT")) {
+                if (studentIDScanned != null) {
+                    Snackbar.make(findViewById(android.R.id.content), "Would you like to add this student to the system?", Snackbar.LENGTH_INDEFINITE)
+                            .setAction("Yes", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    Bundle receivedData = intent.getExtras();
+                                    Bundle bundle = new Bundle();
+                                    bundle.putString("userID", studentIDScanned);
+                                    bundle.putString("courseCode", receivedData.get("courseCode").toString());
+                                    bundle.putString("sessionID", receivedData.get("sessionID").toString());
+                                    Intent addStudentIntent = new Intent(MainActivity.this, AddStudentToSystem.class);
+                                    addStudentIntent.putExtras(bundle);
+                                    startActivity(addStudentIntent);
+                                }
+                            })
+                            .show();
+                }
+            }
+
+            else if(intent.getAction().equals("ADD.STUDENT.TO.LISTVIEW")){
+                Bundle recievedData = intent.getExtras();
+                String studentID = recievedData.get("studentID").toString();
+                adapter.add(studentID);
             }
         }
     };
@@ -146,8 +151,6 @@ public class MainActivity extends AppCompatActivity {
             if(!isBound)
                 bindService(i, idCheckServiceConnection, Context.BIND_AUTO_CREATE);
             idCheckService.processStudent(results);
-            Student s = new Student(results,"name");
-            adapter.add(s);
         }
     }
 
