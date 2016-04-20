@@ -37,7 +37,7 @@ public class ViewCourseInfoActivity extends AppCompatActivity {
                 }
 
                 else if(position == 1){
-                    start(ViewAnalyticsActivity.class);
+                    start(StudentAttendanceActivity.class);
                 }
 
                 else if(position == 2){

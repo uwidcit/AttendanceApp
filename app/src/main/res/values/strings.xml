@@ -12,10 +12,10 @@
     <string name="title_activity_view_analytics">ViewAnalyticsActivity</string>
     <string name="title_activity_view_course_info">ViewCourseInfoActivity</string>
     <string name="title_activity_student_attendance">StudentAttendanceActivity</string>
+    <string name="late_setter_hint">Enter # mins to be late. Default is 10</string>
 
     <string-array name="course_analytics_list">
         <item>Student Attendance</item>
-        <item>Session Popularity</item>
         <item>Student Timeliness</item>
     </string-array>
 
@@ -28,5 +28,6 @@
     <string name="title_activity_view_individual_student_analytics">ViewIndividualStudentAnalytics
     </string>
     <string name="title_activity_add_student_to_system">AddStudentToSystem</string>
+    <string name="title_activity_student_timeliness">StudentTimelinessActivity</string>
 
 </resources>

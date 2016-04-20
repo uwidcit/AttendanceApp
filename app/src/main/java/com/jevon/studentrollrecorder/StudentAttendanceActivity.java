@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.firebase.client.DataSnapshot;
@@ -24,6 +25,7 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.renderer.DataRenderer;
+import com.jevon.studentrollrecorder.pojo.Attendee;
 import com.jevon.studentrollrecorder.pojo.Session;
 import com.jevon.studentrollrecorder.pojo.SortByDate;
 import com.jevon.studentrollrecorder.utils.FirebaseHelper;
@@ -31,9 +33,13 @@ import com.jevon.studentrollrecorder.utils.Utils;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Locale;
+import java.util.StringTokenizer;
 
 public class StudentAttendanceActivity extends AppCompatActivity implements OnChartValueSelectedListener{
 
@@ -44,10 +50,13 @@ public class StudentAttendanceActivity extends AppCompatActivity implements OnCh
     private Firebase sessionRef;
     private String courseCode;
     private String courseName;
+    private int lateMarker=10;
     private long numStudents=0;
     private ArrayList<Session> sessions;
-    private ArrayList<Entry> entries;
+    private ArrayList<Entry> entriesAttendance;
+    private ArrayList<Entry> entriesLateness;
     private ArrayList<String> labels;
+    private EditText lateSetting;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +64,8 @@ public class StudentAttendanceActivity extends AppCompatActivity implements OnCh
         setContentView(R.layout.activity_student_attendance);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        lateSetting = (EditText)findViewById(R.id.late_setter);
 
         // create a new FirebaseHelper instance
         firebaseHelper = new FirebaseHelper();
@@ -111,6 +122,7 @@ public class StudentAttendanceActivity extends AppCompatActivity implements OnCh
         sessionRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                sessions.clear();
                 for(DataSnapshot sesSnapshot: dataSnapshot.getChildren()) {
                     Session temp = sesSnapshot.getValue(Session.class);
                     sessions.add(temp);
@@ -129,8 +141,6 @@ public class StudentAttendanceActivity extends AppCompatActivity implements OnCh
 //                    }
 //                }).start();
                 populateLineChart();
-
-                sessions.clear();
             }
 
             @Override
@@ -149,36 +159,102 @@ public class StudentAttendanceActivity extends AppCompatActivity implements OnCh
             labels.add(s.getDate());
 
             // add entry indicating number of students present at each session
-            entries.add(new Entry((float)s.getAttendees().size(), xCord++));
+            entriesAttendance.add(new Entry((float)s.getAttendees().size(), xCord));
+
+            // add entry indicating number of students late at each session
+            // default late time is 10 mins after scheduled start
+            entriesLateness.add(new Entry((float)findNumLate(s.getAttendees(), lateMarker, s.getDate()), xCord++));
         }
+    }
+
+    private int findNumLate(HashMap<String, Attendee> map, int lateMarker, String date){
+        int numLate=0;
+
+        int startHr = getStartHour(date);
+
+        Collection collection = map.values();
+        Iterator iterator = collection.iterator();
+
+        while(iterator.hasNext()){
+            Attendee temp = (Attendee)iterator.next();
+            int arriveHr = temp.getHr();
+            int arriveMin = temp.getMin();
+            int lateBy=0;
+
+            if(arriveHr - startHr < 0){
+                // teacher recorded student before official start of time
+                lateBy = 0;
+            }
+
+            else{
+                lateBy += ((arriveHr-startHr) * 60) + arriveMin;
+            }
+
+            if(lateBy > lateMarker)
+                numLate++;
+        }
+
+        return numLate;
+    }
+
+    public int getStartHour(String date){
+        // consider replacing with String.split
+        StringTokenizer stringTokenizer = new StringTokenizer(date);
+        String token=null;
+
+        while(stringTokenizer.hasMoreTokens()){
+            token = stringTokenizer.nextToken();
+        }
+
+        return Integer.valueOf(token);
+    }
+
+    public void onLateUpdate(View view){
+        String valueEntered = lateSetting.getText().toString();
+
+        lateMarker = Integer.valueOf(valueEntered);
+        populateLineChart();
     }
 
     private void populateLineChart(){
 
-        entries = new ArrayList<>();
+        entriesAttendance = new ArrayList<>();
+        entriesLateness = new ArrayList<>();
         labels = new ArrayList<>();
 
         Collections.sort(sessions, new SortByDate());
 
         createEntries();
 
-        LineDataSet dataset = new LineDataSet(entries, "Number of Students Present");
+        LineDataSet dataset = new LineDataSet(entriesAttendance, "# of Students Present");
         dataset.setDrawCircles(true);
         dataset.setDrawCubic(true);
+        dataset.setDrawValues(false);
         dataset.setColor(Color.BLUE);
         dataset.setCircleColor(Color.RED);
+
+        LineDataSet dataset2 = new LineDataSet(entriesLateness, "# of Students Late");
+        dataset2.setDrawCircles(true);
+        dataset2.setDrawCubic(true);
+        dataset2.setDrawValues(false);
+        dataset2.setColor(Color.RED);
+        dataset2.setDrawFilled(true);
+        dataset2.setFillColor(Color.YELLOW);
+        dataset2.setCircleColor(Color.BLUE);
 
         LineData data = new LineData(labels, dataset);
         data.setValueTextColor(Color.BLUE);
 
+        data.addDataSet(dataset2);
         data.notifyDataChanged();
 
         //add data
         lineChart.setData(data);
+
         //let the chart know its data has changed
         lineChart.notifyDataSetChanged();
 
-        // refresh chart
+        // implicitly refreshes chart
         lineChart.animateXY(2000,2000);
         //lineChart.invalidate();
     }
