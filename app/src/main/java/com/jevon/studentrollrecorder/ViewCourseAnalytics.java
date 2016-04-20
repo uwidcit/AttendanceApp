@@ -28,12 +28,16 @@ import com.jevon.studentrollrecorder.pojo.Attendee;
 import com.jevon.studentrollrecorder.pojo.Session;
 import com.jevon.studentrollrecorder.utils.Utils;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.StringTokenizer;
+import java.lang.Float;
 
 public class ViewCourseAnalytics extends AppCompatActivity implements OnChartValueSelectedListener{
 
@@ -51,6 +55,9 @@ public class ViewCourseAnalytics extends AppCompatActivity implements OnChartVal
     private ArrayList<Entry> entriesLateness;
     private ArrayList<String> labels;
     private EditText lateSetting;
+    private LineData data;
+    private LineDataSet dataset;            // will be used for attendance entries
+    private LineDataSet dataset2;            // will be used for lateness entries
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,12 +147,25 @@ public class ViewCourseAnalytics extends AppCompatActivity implements OnChartVal
             labels.add(shortenDate(s.getDate()));
 
             // add entry indicating number of students present at each session
-            entriesAttendance.add(new Entry((float)s.getAttendees().size(), xCord));
+            entriesAttendance.add(new Entry((float)s.getAttendees().size(), xCord, toDate(s.getDate())));
 
             // add entry indicating number of students late at each session
             // default late time is 10 mins after scheduled start
-            entriesLateness.add(new Entry((float)findNumLate(s.getAttendees(), lateMarker, s.getDate()), xCord++));
+            entriesLateness.add(new Entry((float)findNumLate(s.getAttendees(), lateMarker, s.getDate()), xCord++, toDate(s.getDate())));
         }
+    }
+
+    private Date toDate(String dateStr){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EE dd-MM-yy H", Locale.ENGLISH);
+        Date sessionDate = new Date();
+
+        try{
+            sessionDate = dateFormat.parse(dateStr);
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+        return sessionDate;
     }
 
     private String shortenDate(String longDate){
@@ -237,14 +257,14 @@ public class ViewCourseAnalytics extends AppCompatActivity implements OnChartVal
 
                 createEntries();
 
-                LineDataSet dataset = new LineDataSet(entriesAttendance, "# of Students Present");
+                dataset = new LineDataSet(entriesAttendance, "# of Students Present");
                 dataset.setDrawCircles(true);
                 dataset.setDrawCubic(true);
                 dataset.setDrawValues(false);
                 dataset.setColor(Color.BLUE);
                 dataset.setCircleColor(Color.RED);
 
-                LineDataSet dataset2 = new LineDataSet(entriesLateness, "# of Students Late");
+                dataset2 = new LineDataSet(entriesLateness, "# of Students Late");
                 dataset2.setDrawCircles(true);
                 dataset2.setDrawCubic(true);
                 dataset2.setDrawValues(false);
@@ -253,7 +273,7 @@ public class ViewCourseAnalytics extends AppCompatActivity implements OnChartVal
                 dataset2.setFillColor(Color.YELLOW);
                 dataset2.setCircleColor(Color.BLUE);
 
-                LineData data = new LineData(labels, dataset);
+                data = new LineData(labels, dataset);
                 data.setValueTextColor(Color.BLUE);
 
                 data.addDataSet(dataset2);
@@ -296,8 +316,7 @@ public class ViewCourseAnalytics extends AppCompatActivity implements OnChartVal
         // set an alternative background color
         lineChart.setBackgroundColor(Color.BLACK);
 
-        LineData data = new LineData();
-        data.setValueTextColor(Color.GREEN);
+        data = new LineData();
 
         // add empty data
         lineChart.setData(data);
@@ -338,11 +357,23 @@ public class ViewCourseAnalytics extends AppCompatActivity implements OnChartVal
         xl.setAvoidFirstLastClipping(true);
         xl.setSpaceBetweenLabels(5);
         xl.setEnabled(true);
+
     }
 
     @Override
     public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
-        Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+        Date dateSelected = (Date)e.getData();
+
+        if(dataSetIndex == data.getIndexOfDataSet(dataset)){
+            String message = "Attendance is: " + e.getVal() + " on " + dateSelected.toString();
+            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+
+        }
+
+        else{
+            String message = "Late arrivals are: " + e.getVal() + " on " + dateSelected.toString();
+            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
