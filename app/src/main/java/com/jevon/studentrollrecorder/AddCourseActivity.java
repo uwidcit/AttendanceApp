@@ -10,8 +10,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
+import com.jevon.studentrollrecorder.helpers.FirebaseHelper;
 import com.jevon.studentrollrecorder.pojo.Course;
-import com.jevon.studentrollrecorder.utils.FirebaseHelper;
 import com.jevon.studentrollrecorder.utils.Utils;
 
 public class AddCourseActivity extends AppCompatActivity {

@@ -1,8 +1,7 @@
-package com.jevon.studentrollrecorder.utils;
+package com.jevon.studentrollrecorder.helpers;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -12,6 +11,8 @@ import com.jevon.studentrollrecorder.pojo.Attendee;
 import com.jevon.studentrollrecorder.pojo.Course;
 import com.jevon.studentrollrecorder.pojo.Lecture;
 import com.jevon.studentrollrecorder.pojo.Student;
+import com.jevon.studentrollrecorder.utils.MyApplication;
+import com.jevon.studentrollrecorder.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,8 +56,8 @@ public class FirebaseHelper {
     }
 
     public  void markAsPresent(String courseCode, String session_id, String student_id){
-        int hour = Utils.getCurrentHour();
-        int minute = Utils.getCurrentMinute();
+        int hour = TimeHelper.getCurrentHour();
+        int minute = TimeHelper.getCurrentMinute();
 
         Attendee a = new Attendee(hour,minute);
         ObjectMapper m = new ObjectMapper();

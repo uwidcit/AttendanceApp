@@ -24,9 +24,10 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.jevon.studentrollrecorder.helpers.FirebaseHelper;
+import com.jevon.studentrollrecorder.helpers.TimeHelper;
 import com.jevon.studentrollrecorder.pojo.Course;
 import com.jevon.studentrollrecorder.pojo.Lecture;
-import com.jevon.studentrollrecorder.utils.FirebaseHelper;
 import com.jevon.studentrollrecorder.utils.Utils;
 
 import java.util.ArrayList;
@@ -96,7 +97,7 @@ public class AddLecturesActivity extends AppCompatActivity {
     public void onClickAddLect(View v) {
         if (v.getId() == R.id.fab_save){
             if(day != null && startHr != -1 && startMin != -1 && endHr != -1 && endMin != -1){
-                if(Utils.getMilitaryTime(endHr,endMin) - Utils.getMilitaryTime(startHr,startMin) >= 100){
+                if(TimeHelper.getMilitaryTime(endHr,endMin) - TimeHelper.getMilitaryTime(startHr,startMin) >= 100){
                     String clashedWith = isClashing(startHr, endHr, startMin, endMin);
                     if(clashedWith.equals(NONE)){
                         lectures.add(0,new Lecture(startHr,startMin,endHr,endMin,day));
@@ -117,18 +118,18 @@ public class AddLecturesActivity extends AppCompatActivity {
             Toast.makeText(this, "Could not check for clashes",Toast.LENGTH_LONG).show();
         }
         else{
-            int proposed_starttime = Utils.getMilitaryTime(startHr, startMin);
-            int proposed_endtime = Utils.getMilitaryTime(endHr, endMin);
+            int proposed_starttime = TimeHelper.getMilitaryTime(startHr, startMin);
+            int proposed_endtime = TimeHelper.getMilitaryTime(endHr, endMin);
             for(Course c: courses){
                 HashMap<String,Lecture> lectures = c.getLecturess();
                 if(lectures!=null)
                     for(Lecture l: lectures.values()){
-                        int lect_start = Utils.getMilitaryTime(l.getStartHr(), l.getStartMin());
-                        int lect_end = Utils.getMilitaryTime(l.getEndHr(), l.getEndMin());
+                        int lect_start = TimeHelper.getMilitaryTime(l.getStartHr(), l.getStartMin());
+                        int lect_end = TimeHelper.getMilitaryTime(l.getEndHr(), l.getEndMin());
                         if(lect_start <= proposed_starttime && proposed_starttime < lect_end && l.getDay().equals(day))
-                            return c.getCourseCode() + "[" + Utils.formatTime(l.getStartHr(),l.getStartMin()) + " - " + Utils.formatTime(l.getEndHr(),l.getEndMin()) +"]";
+                            return c.getCourseCode() + "[" + TimeHelper.formatTime(l.getStartHr(),l.getStartMin()) + " - " + TimeHelper.formatTime(l.getEndHr(),l.getEndMin()) +"]";
                         if(proposed_starttime <= lect_start && lect_start < proposed_endtime && l.getDay().equals(day))
-                            return c.getCourseCode() + "[" + Utils.formatTime(l.getStartHr(),l.getStartMin()) + " - " + Utils.formatTime(l.getEndHr(),l.getEndMin()) +"]";
+                            return c.getCourseCode() + "[" + TimeHelper.formatTime(l.getStartHr(),l.getStartMin()) + " - " + TimeHelper.formatTime(l.getEndHr(),l.getEndMin()) +"]";
                     }
             }
         }
@@ -193,12 +194,12 @@ public class AddLecturesActivity extends AppCompatActivity {
                 if(which == 1){
                     startHr = hourOfDay;
                     startMin = minute;
-                    tv_start.setText(Utils.formatTime(hourOfDay,minute));
+                    tv_start.setText(TimeHelper.formatTime(hourOfDay,minute));
                 }
                 else if(which == 2) {
                     endHr = hourOfDay;
                     endMin = minute;
-                    tv_end.setText(Utils.formatTime(hourOfDay, minute));
+                    tv_end.setText(TimeHelper.formatTime(hourOfDay, minute));
                 }
             }
         }, hour, minute, false);

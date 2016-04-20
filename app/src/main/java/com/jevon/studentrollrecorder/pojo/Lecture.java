@@ -1,6 +1,6 @@
 package com.jevon.studentrollrecorder.pojo;
 
-import com.jevon.studentrollrecorder.utils.Utils;
+import com.jevon.studentrollrecorder.helpers.TimeHelper;
 
 
 /**
@@ -22,7 +22,7 @@ public class Lecture {
 
     @Override
     public String toString() {
-        return day+ "  "+ Utils.formatTime(startHr,startMin) + " - " + Utils.formatTime(endHr,endMin);
+        return day+ "  "+ TimeHelper.formatTime(startHr,startMin) + " - " + TimeHelper.formatTime(endHr,endMin);
     }
 
 

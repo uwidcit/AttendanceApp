@@ -16,8 +16,8 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.jevon.studentrollrecorder.helpers.FirebaseHelper;
 import com.jevon.studentrollrecorder.pojo.Course;
-import com.jevon.studentrollrecorder.utils.FirebaseHelper;
 import com.jevon.studentrollrecorder.utils.Utils;
 
 import java.util.ArrayList;
@@ -50,10 +50,9 @@ public class ViewCoursesActivity extends AppCompatActivity {
     }
 
     private void setUpListView(){
-        //TODO: get lecturer courses from DB
         courses = new ArrayList<>();
         getCourses();
-        adapter = new ArrayAdapter<>(ViewCoursesActivity.this,R.layout.layout_listview_item_lg,courses);
+        adapter = new ArrayAdapter<>(ViewCoursesActivity.this,R.layout.layout_listview_item_med,courses);
         lv_courses.setAdapter(adapter);
 
         lv_courses.setOnItemClickListener(new AdapterView.OnItemClickListener() {

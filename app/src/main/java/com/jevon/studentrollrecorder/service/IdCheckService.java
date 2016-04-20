@@ -12,11 +12,11 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.jevon.studentrollrecorder.helpers.FirebaseHelper;
+import com.jevon.studentrollrecorder.helpers.TimeHelper;
 import com.jevon.studentrollrecorder.pojo.Course;
 import com.jevon.studentrollrecorder.pojo.Lecture;
 import com.jevon.studentrollrecorder.pojo.Student;
-import com.jevon.studentrollrecorder.utils.FirebaseHelper;
-import com.jevon.studentrollrecorder.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,8 +42,8 @@ public class IdCheckService extends Service {
     //Entry point to processing in the service. Called from main activity when id is scanned
     public void processStudent(String student_id){
         Log.e(TAG, "running service for "+ student_id);
-        currentHour = Utils.getCurrentHour();
-        today = Utils.getCurrDay();
+        currentHour = TimeHelper.getCurrentHour();
+        today = TimeHelper.getCurrDay();
         Log.e(TAG, "today: " + today+"hr: "+currentHour);
         scanned_id = student_id;
         courses = new ArrayList<>();
@@ -59,7 +59,7 @@ public class IdCheckService extends Service {
             if(lectures!=null)
                 for (Lecture lecture : lectures.values()) {
                     if(currentHour >= lecture.getStartHr() && currentHour < lecture.getEndHr() && lecture.getDay().equalsIgnoreCase(today)){
-                        currSession = new LectureSession( c.getCourseCode(), Utils.getIDTimeStamp(lecture.getStartHr()) );
+                        currSession = new LectureSession( c.getCourseCode(), TimeHelper.getIDTimeStamp(lecture.getStartHr()) );
                     }
                 }
             else

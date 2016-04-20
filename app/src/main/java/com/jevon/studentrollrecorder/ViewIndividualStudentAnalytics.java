@@ -1,12 +1,9 @@
 package com.jevon.studentrollrecorder;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -20,12 +17,11 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
-import com.google.zxing.common.StringUtils;
+import com.jevon.studentrollrecorder.helpers.FirebaseHelper;
 import com.jevon.studentrollrecorder.pojo.Attendee;
 import com.jevon.studentrollrecorder.pojo.Course;
 import com.jevon.studentrollrecorder.pojo.Lecture;
 import com.jevon.studentrollrecorder.pojo.Session;
-import com.jevon.studentrollrecorder.utils.FirebaseHelper;
 import com.jevon.studentrollrecorder.utils.Utils;
 
 import java.sql.Time;
@@ -63,23 +59,14 @@ public class ViewIndividualStudentAnalytics extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
         /* retrieve data from the intent. */
         Bundle bundle = getIntent().getExtras();
 
         if(bundle != null){
             courseCode = bundle.getString(Utils.COURSE_CODE);
             courseName = bundle.getString(Utils.COURSE_NAME);
-            studentId = bundle.getString("studentId");
-            studentName = bundle.getString("studentName");
+            studentId = bundle.getString(Utils.ID);
+            studentName = bundle.getString(Utils.NAME);
         }
 
         /* Draw charts. */
@@ -92,9 +79,6 @@ public class ViewIndividualStudentAnalytics extends AppCompatActivity {
         /* display basic student and course information. */
         studentInfo();
         courseInfo();
-
-
-
 
     }
 
@@ -183,6 +167,7 @@ public class ViewIndividualStudentAnalytics extends AppCompatActivity {
 
         PieData data = new PieData(labels, dataset);
         this.attendancePieChart.setCenterText(centerText);
+        this.attendancePieChart.setCenterTextSize(10);
         this.attendancePieChart.setUsePercentValues(true);
         this.attendancePieChart.setData(data);
 
@@ -238,6 +223,7 @@ public class ViewIndividualStudentAnalytics extends AppCompatActivity {
 
         PieData data = new PieData(labels, dataset);
         this.punctualityPieChart.setCenterText(centerText);
+        this.punctualityPieChart.setCenterTextSize(10);
         this.punctualityPieChart.setUsePercentValues(true);
         this.punctualityPieChart.setData(data);
 
@@ -371,8 +357,6 @@ public class ViewIndividualStudentAnalytics extends AppCompatActivity {
         catch(Exception e){
 
         }
-
-
 
         /* update chart. */
         punctualityCalculations();

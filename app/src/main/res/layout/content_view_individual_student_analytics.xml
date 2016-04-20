@@ -24,7 +24,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Course Information"
         android:id="@+id/txt_course"
         android:layout_gravity="center_horizontal" />
@@ -44,14 +44,15 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Enter Minutes To Be Considered Late (Minutes)"
+        android:text="Enter Minutes To Be Considered Late"
         android:id="@+id/txt_late_heading"
         android:layout_gravity="center_horizontal" />
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/edit_txt_late_time" />
+        android:id="@+id/edit_txt_late_time"
+        android:hint="Number of minutes"/>
 
     <Button
         style="?android:attr/buttonStyleSmall"

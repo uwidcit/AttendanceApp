@@ -15,11 +15,12 @@
     tools:showIn="@layout/activity_view_lectures">
 
     <TextView
-        android:id="@+id/tv_instr"
-        android:layout_width="wrap_content"
+        android:id="@+id/tv_lectures"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:text="Lectures"
+        android:textAlignment="center"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="#000000"
         android:background="@drawable/border_style"

@@ -2,10 +2,8 @@ package com.jevon.studentrollrecorder;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -24,21 +22,17 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
-import com.github.mikephil.charting.renderer.DataRenderer;
+import com.jevon.studentrollrecorder.helpers.FirebaseHelper;
+import com.jevon.studentrollrecorder.helpers.SortByDateHelper;
 import com.jevon.studentrollrecorder.pojo.Attendee;
 import com.jevon.studentrollrecorder.pojo.Session;
-import com.jevon.studentrollrecorder.pojo.SortByDate;
-import com.jevon.studentrollrecorder.utils.FirebaseHelper;
 import com.jevon.studentrollrecorder.utils.Utils;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Locale;
 import java.util.StringTokenizer;
 
 public class StudentAttendanceActivity extends AppCompatActivity implements OnChartValueSelectedListener{
@@ -222,7 +216,7 @@ public class StudentAttendanceActivity extends AppCompatActivity implements OnCh
         entriesLateness = new ArrayList<>();
         labels = new ArrayList<>();
 
-        Collections.sort(sessions, new SortByDate());
+        Collections.sort(sessions, new SortByDateHelper());
 
         createEntries();
 
