@@ -35,7 +35,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 
-public class StudentAttendanceActivity extends AppCompatActivity implements OnChartValueSelectedListener{
+public class ViewCourseAnalytics extends AppCompatActivity implements OnChartValueSelectedListener{
 
     private LineChart lineChart;
     private FirebaseHelper firebaseHelper;
@@ -121,19 +121,6 @@ public class StudentAttendanceActivity extends AppCompatActivity implements OnCh
                     Session temp = sesSnapshot.getValue(Session.class);
                     sessions.add(temp);
                 }
-
-//                new Thread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        populateLineChart();
-//                        lineChart.post(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                lineChart.invalidate();
-//                            }
-//                        });
-//                    }
-//                }).start();
                 populateLineChart();
             }
 
@@ -150,7 +137,7 @@ public class StudentAttendanceActivity extends AppCompatActivity implements OnCh
 
         for(Session s : sessions){
             // add label of string version of date of this session
-            labels.add(s.getDate());
+            labels.add(shortenDate(s.getDate()));
 
             // add entry indicating number of students present at each session
             entriesAttendance.add(new Entry((float)s.getAttendees().size(), xCord));
@@ -159,6 +146,33 @@ public class StudentAttendanceActivity extends AppCompatActivity implements OnCh
             // default late time is 10 mins after scheduled start
             entriesLateness.add(new Entry((float)findNumLate(s.getAttendees(), lateMarker, s.getDate()), xCord++));
         }
+    }
+
+    private String shortenDate(String longDate){
+        String date = "";
+        String token=null;
+        int tokenNum=1;
+
+        StringTokenizer stringTokenizer = new StringTokenizer(longDate,"-, ");
+
+        while(stringTokenizer.hasMoreTokens()){
+            token = stringTokenizer.nextToken();
+
+            if(tokenNum == 2){
+                date += token + "-";
+            }
+
+            else if(tokenNum == 3){
+                date += token + " ";
+            }
+
+            else if(tokenNum == 5) {
+                date += token;
+            }
+
+            tokenNum++;
+        }
+        return date;
     }
 
     private int findNumLate(HashMap<String, Attendee> map, int lateMarker, String date){
@@ -216,41 +230,45 @@ public class StudentAttendanceActivity extends AppCompatActivity implements OnCh
         entriesLateness = new ArrayList<>();
         labels = new ArrayList<>();
 
-        Collections.sort(sessions, new SortByDateHelper());
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Collections.sort(sessions, new SortByDateHelper());
 
-        createEntries();
+                createEntries();
 
-        LineDataSet dataset = new LineDataSet(entriesAttendance, "# of Students Present");
-        dataset.setDrawCircles(true);
-        dataset.setDrawCubic(true);
-        dataset.setDrawValues(false);
-        dataset.setColor(Color.BLUE);
-        dataset.setCircleColor(Color.RED);
+                LineDataSet dataset = new LineDataSet(entriesAttendance, "# of Students Present");
+                dataset.setDrawCircles(true);
+                dataset.setDrawCubic(true);
+                dataset.setDrawValues(false);
+                dataset.setColor(Color.BLUE);
+                dataset.setCircleColor(Color.RED);
 
-        LineDataSet dataset2 = new LineDataSet(entriesLateness, "# of Students Late");
-        dataset2.setDrawCircles(true);
-        dataset2.setDrawCubic(true);
-        dataset2.setDrawValues(false);
-        dataset2.setColor(Color.RED);
-        dataset2.setDrawFilled(true);
-        dataset2.setFillColor(Color.YELLOW);
-        dataset2.setCircleColor(Color.BLUE);
+                LineDataSet dataset2 = new LineDataSet(entriesLateness, "# of Students Late");
+                dataset2.setDrawCircles(true);
+                dataset2.setDrawCubic(true);
+                dataset2.setDrawValues(false);
+                dataset2.setColor(Color.RED);
+                dataset2.setDrawFilled(true);
+                dataset2.setFillColor(Color.YELLOW);
+                dataset2.setCircleColor(Color.BLUE);
 
-        LineData data = new LineData(labels, dataset);
-        data.setValueTextColor(Color.BLUE);
+                LineData data = new LineData(labels, dataset);
+                data.setValueTextColor(Color.BLUE);
 
-        data.addDataSet(dataset2);
-        data.notifyDataChanged();
+                data.addDataSet(dataset2);
+                data.notifyDataChanged();
 
-        //add data
-        lineChart.setData(data);
+                //add data
+                lineChart.setData(data);
 
-        //let the chart know its data has changed
-        lineChart.notifyDataSetChanged();
+                //let the chart know its data has changed
+                lineChart.notifyDataSetChanged();
+            }
+        }).start();
 
-        // implicitly refreshes chart
-        lineChart.animateXY(2000,2000);
-        //lineChart.invalidate();
+        // implicitly refreshes the chart
+        lineChart.animateXY(2000,3000);
     }
 
     private void setUpLineChart(){
