@@ -4,6 +4,7 @@
     android:textColor="#FFF"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:textAlignment="center"
     android:textAppearance="?android:textAppearanceLarge"
     android:paddingTop="7dp"
     android:paddingBottom="7dp"

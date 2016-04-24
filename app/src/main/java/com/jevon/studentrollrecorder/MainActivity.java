@@ -25,7 +25,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.jevon.studentrollrecorder.pojo.Student;
 import com.jevon.studentrollrecorder.service.IdCheckService;
 import com.jevon.studentrollrecorder.service.IdServiceBinder;
 import com.jevon.studentrollrecorder.utils.Utils;
@@ -72,13 +71,13 @@ public class MainActivity extends AppCompatActivity {
         tv.setBackgroundResource(R.drawable.border_style);
         intentFilter = new IntentFilter();
         intentFilter.addAction("SHOW.SNACKBAR.ADD.STUDENT");
+        intentFilter.addAction("ADD.STUDENT.TO.LISTVIEW");
         registerReceiver(mReceiver,intentFilter);
     }
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, final Intent intent) {
-
             if (intent.getAction().equals("SHOW.SNACKBAR.ADD.STUDENT")) {
                 if (studentIDScanned != null) {
                     Snackbar.make(findViewById(android.R.id.content), "Would you like to add this student to the system?", Snackbar.LENGTH_INDEFINITE)
@@ -98,11 +97,12 @@ public class MainActivity extends AppCompatActivity {
                             .show();
                 }
             }
-
             else if(intent.getAction().equals("ADD.STUDENT.TO.LISTVIEW")){
                 Bundle recievedData = intent.getExtras();
-                String studentID = recievedData.get("studentID").toString();
-                adapter.add(studentID);
+                String studentID = recievedData.get(Utils.ID).toString();
+                String studentName = recievedData.get(Utils.NAME).toString();
+                if(!students.contains(studentID + " - " + studentName) )
+                    adapter.add(studentID + " - " + studentName);
             }
         }
     };
@@ -140,13 +140,12 @@ public class MainActivity extends AppCompatActivity {
         lv_present_students.setAdapter(adapter);
     }
 
-//    TODO: check for internet connectivity before attempting to process the scanned ID
     //Receives results of scanning and communicated with the service
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_SCANNER && resultCode == RESULT_OK) {
             String results = data.getStringExtra("results");
-            studentIDScanned=results;
+            studentIDScanned = results;
             Log.e(TAG,"scanned: "+results);
             if(!isBound)
                 bindService(i, idCheckServiceConnection, Context.BIND_AUTO_CREATE);

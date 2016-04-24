@@ -4,9 +4,11 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -241,8 +243,10 @@ public class ViewIndividualStudentAnalytics extends AppCompatActivity {
                 /* load in the course. */
                 course = dataSnapshot.getValue(Course.class);
 
-                attendanceCalculations();
-                punctualityCalculations();
+                if(course.getSessions() != null && course.getLecturess() != null){
+                    attendanceCalculations();
+                    punctualityCalculations();
+                }
 
             }
 
@@ -287,7 +291,7 @@ public class ViewIndividualStudentAnalytics extends AppCompatActivity {
                 String[] keyParts = sessionKey.split("\\s+");
 
                 /* build string to indentify the lecture. */
-                String lectureKey = keyParts[0].substring(0,3) + " " + keyParts[1];
+                String lectureKey = keyParts[0].substring(0,3) + " " + keyParts[2];
 
                 /* get the lecture object from lecturekey. */
                 Lecture lecture = course.getLecturess().get(lectureKey);
@@ -349,7 +353,8 @@ public class ViewIndividualStudentAnalytics extends AppCompatActivity {
             this.lateTime = Integer.parseInt(late_edit.getText().toString());
         }
         catch(Exception e){
-
+            /* toast for invalid number.*/
+            Toast.makeText(this, "You did not enter a valid number", Toast.LENGTH_LONG).show();
         }
 
         /* update chart. */

@@ -55,7 +55,7 @@ public class FirebaseHelper {
         }
     }
 
-    public  void markAsPresent(String courseCode, String session_id, String student_id){
+    public  void markAsPresent(String courseCode, String session_id, String student_id, String student_name){
         int hour = TimeHelper.getCurrentHour();
         int minute = TimeHelper.getCurrentMinute();
 
@@ -71,7 +71,7 @@ public class FirebaseHelper {
         }
         ref_id.child(courseCode).child(Utils.SESSIONS).child(session_id).child(Utils.DATE).setValue(session_id);
         ref_id.child(courseCode).child(Utils.SESSIONS).child(session_id).child(Utils.ATTENDEES).child(student_id).setValue(attendeeMap);
-        broadcastIntent(student_id);
+        broadcastIntent(student_id, student_name);
     }
 
     public void addStudentToClass(String courseCode, String studentName, String studentID){
@@ -92,11 +92,12 @@ public class FirebaseHelper {
         return this.uid;
     }
 
-    public void broadcastIntent(String studentId){
+    public void broadcastIntent(String studentId, String studentName){
         Intent i = new Intent();
         i.setAction("ADD.STUDENT.TO.LISTVIEW");
         Bundle b = new Bundle();
-        b.putString(Utils.ID,studentId);
+        b.putString(Utils.ID, studentId);
+        b.putString(Utils.NAME, studentName);
         i.putExtras(b);
         Context c = myApplication.getApplicationContext();
         c.sendBroadcast(i);
