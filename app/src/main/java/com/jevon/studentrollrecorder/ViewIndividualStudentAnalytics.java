@@ -353,6 +353,7 @@ public class ViewIndividualStudentAnalytics extends AppCompatActivity {
             this.lateTime = Integer.parseInt(late_edit.getText().toString());
         }
         catch(Exception e){
+            /* toast for invalid number.*/
             Toast.makeText(this, "You did not enter a valid number", Toast.LENGTH_LONG).show();
         }
 
