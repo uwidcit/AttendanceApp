@@ -95,9 +95,10 @@ public class ViewCourseAnalytics extends AppCompatActivity implements OnChartVal
 
     // obtain the number of students in this particular course so that chart can be set up properly
     private void numStudentInCourse(){
+        // move directly to a reference to the students for this particular course
         studentRef = ref.child(courseCode).child(Utils.STUDENTS);
 
-        // add a listener to student location in firebase that will be triggered when data there changes. when triggered the value of the data will be accessible
+        // add a listener to student location in firebase that will be triggered only once when data there changes (initially). when triggered the value of the data will be accessible
         studentRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -117,6 +118,7 @@ public class ViewCourseAnalytics extends AppCompatActivity implements OnChartVal
 
     private void getSessions(){
 
+        // move directly to a reference to the sessions data for this particular course
         sessionRef = ref.child(courseCode).child(Utils.SESSIONS);
         sessions = new ArrayList<>();
 
@@ -124,6 +126,7 @@ public class ViewCourseAnalytics extends AppCompatActivity implements OnChartVal
         sessionRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                // empty the currently stored session data to be replaced by updated data
                 sessions.clear();
                 for(DataSnapshot sesSnapshot: dataSnapshot.getChildren()) {
                     Session temp = sesSnapshot.getValue(Session.class);
@@ -157,7 +160,7 @@ public class ViewCourseAnalytics extends AppCompatActivity implements OnChartVal
     }
 
     private Date toDate(String dateStr){
-        SimpleDateFormat dateFormat = new SimpleDateFormat("EE dd-MM-yy H", Locale.ENGLISH);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE dd-MM-yy H", Locale.ENGLISH);
         Date sessionDate = new Date();
 
         try{
@@ -196,6 +199,7 @@ public class ViewCourseAnalytics extends AppCompatActivity implements OnChartVal
         return date;
     }
 
+    // determine the number of students that arrived late for a particular session
     private int findNumLate(HashMap<String, Attendee> map, int lateMarker, String date){
         int numLate=0;
 
@@ -349,8 +353,8 @@ public class ViewCourseAnalytics extends AppCompatActivity implements OnChartVal
 
         // indicate the number of students registered for course as a line on the y axis
         LimitLine maxStudents = new LimitLine((float)(numStudents), "# registered");
-        maxStudents.setLineColor(Color.RED);
-        maxStudents.setTextColor(Color.RED);
+        maxStudents.setLineColor(Color.GREEN);
+        maxStudents.setTextColor(Color.BLACK);
         maxStudents.setLabelPosition(LimitLine.LimitLabelPosition.LEFT_BOTTOM);
         maxStudents.setTextSize(5);
         leftAxis.addLimitLine(maxStudents);
