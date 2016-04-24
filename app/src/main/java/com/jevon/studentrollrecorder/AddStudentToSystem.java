@@ -1,7 +1,6 @@
 package com.jevon.studentrollrecorder;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -21,7 +20,6 @@ public class AddStudentToSystem extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 
         loadStudentInfo();
         setupViews();
@@ -43,7 +41,7 @@ public class AddStudentToSystem extends AppCompatActivity {
         String userName = userNameET.getText().toString();
 
         FirebaseHelper fh = new FirebaseHelper();
-        fh.markAsPresent(courseID, sessionID, studentID);
+        fh.markAsPresent(courseID, sessionID, studentID, userName);
         fh.addStudentToClass(courseID,userName,studentID);
     }
 

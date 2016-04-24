@@ -32,6 +32,7 @@ public class IdCheckService extends Service {
     private int currentHour;
     private String today;
     private String scanned_id;
+    private String student_name;
     private ArrayList<Course> courses;
 
     private final IBinder iBinder = new IdServiceBinder(this);
@@ -102,7 +103,7 @@ public class IdCheckService extends Service {
             if(isRegistered(scanned_id, currentSession.courseCode)){
                 Log.e(TAG, scanned_id + " present for "+ currentSession.toString());
                 FirebaseHelper fh = new FirebaseHelper();
-                fh.markAsPresent(currentSession.courseCode, currentSession.sessionID,scanned_id);
+                fh.markAsPresent(currentSession.courseCode, currentSession.sessionID,scanned_id,student_name);
 
             }
             else {
@@ -124,7 +125,9 @@ public class IdCheckService extends Service {
                 HashMap<String, Student> map_students = c.getStudents();
                 if(map_students != null)
                     for (Student s : map_students.values()) {
-                        if (s.getId().equals(student_id)) return true;
+                        if (s.getId().equals(student_id)){
+                            student_name = s.getName();
+                            return true;}
                     }
             }
         }
