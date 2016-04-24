@@ -21,12 +21,11 @@ public class SortByDateHelper implements Comparator<Session> {
         else if(s1Time < s2Time){
             return -1;
         }
-
         return 0;
     }
 
     private long convertDate(Session session){
-        SimpleDateFormat dateFormat = new SimpleDateFormat("EE dd-MM-yy H", Locale.ENGLISH);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE dd-MM-yy H", Locale.ENGLISH);
         Date sessionDate = new Date();
 
         try{
