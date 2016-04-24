@@ -7,9 +7,12 @@ import java.util.Locale;
 
 /**
  * Created by jevon on 20-Apr-16.
+ *
+ * Helper class that provides some useful time related functions
  */
 public class TimeHelper {
 
+    //formats 24hr time to am/pm
     public static String formatTime(int hour, int minute){
         String am_pm = "am";
         if(hour>=12 && hour < 24){
@@ -21,6 +24,7 @@ public class TimeHelper {
         return df.format(hour)+":"+df.format(minute)+" "+am_pm;
     }
 
+    //generate an ID for a session by concatenating the current date and the time the session is scheduled to start
     public static String getIDTimeStamp(int startHr){
         Calendar c = Calendar.getInstance();
         SimpleDateFormat df = new SimpleDateFormat("EE dd-MM-yy", Locale.ENGLISH);

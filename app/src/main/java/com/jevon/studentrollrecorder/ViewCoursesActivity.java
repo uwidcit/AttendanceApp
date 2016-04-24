@@ -22,6 +22,8 @@ import com.jevon.studentrollrecorder.utils.Utils;
 
 import java.util.ArrayList;
 
+/*Shows the current list of courses for the lecturer. Clicking one takes you to the list of options for the course*/
+
 public class ViewCoursesActivity extends AppCompatActivity {
     private ListView lv_courses;
     private ArrayList<Course> courses;
@@ -78,7 +80,7 @@ public class ViewCoursesActivity extends AppCompatActivity {
                 if(snapshot.hasChildren()){
                     for (DataSnapshot coursesSnapshot: snapshot.getChildren()){
                         Course c = coursesSnapshot.getValue(Course.class);
-                        Log.e("Course received", c.toString());
+                        Log.i("Course received", c.toString());
                         adapter.add(c);
                     }
                 }

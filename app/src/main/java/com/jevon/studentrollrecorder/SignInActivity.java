@@ -12,7 +12,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -31,6 +30,11 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.jevon.studentrollrecorder.pojo.User;
 import com.jevon.studentrollrecorder.utils.MyApplication;
 import com.jevon.studentrollrecorder.utils.Utils;
+
+/*This activity is launched on first install or if the user is logged out
+* It allows the to sign into the application using their Google account
+* (which they are almost guaranteed to have since it's android)
+* The user's google sign in token is stored in shared prefs so that he is not prompted to sign in each time the app launches*/
 
 public class SignInActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener,
@@ -114,7 +118,6 @@ public class SignInActivity extends AppCompatActivity implements
         else if(requestCode == REQUEST_AUTHORIZATION){
             if (resultCode == Activity.RESULT_OK) {
                 signIn();
-                Log.e("SignIn","signin called again");
             } else {
                 // User denied access, show him the account chooser again
                 Toast.makeText(this, "You have to allow access", Toast.LENGTH_LONG).show();

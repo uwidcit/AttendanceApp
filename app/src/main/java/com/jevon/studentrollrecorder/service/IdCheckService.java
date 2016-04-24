@@ -26,6 +26,7 @@ import java.util.HashMap;
 * 2nd checks if there is a lecture at the moment
 * 3rd checks if the id scanned belongs to a student registered for the course
 * 4th marks the student present for the session*/
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class IdCheckService extends Service {
     private static final String TAG = "IdCheckService";
@@ -34,7 +35,6 @@ public class IdCheckService extends Service {
     private String scanned_id;
     private String student_name;
     private ArrayList<Course> courses;
-
     private final IBinder iBinder = new IdServiceBinder(this);
 
     public IdCheckService() {
@@ -42,10 +42,13 @@ public class IdCheckService extends Service {
 
     //Entry point to processing in the service. Called from main activity when id is scanned
     public void processStudent(String student_id){
-        Log.e(TAG, "running service for "+ student_id);
+        Log.i(TAG, "running service for "+ student_id);
+
+        //get curr day and hour. required for checking for current course
         currentHour = TimeHelper.getCurrentHour();
         today = TimeHelper.getCurrDay();
-        Log.e(TAG, "today: " + today+"hr: "+currentHour);
+
+        Log.i(TAG, "today: " + today+"hr: "+currentHour);
         scanned_id = student_id;
         courses = new ArrayList<>();
         getCourses();
@@ -54,7 +57,6 @@ public class IdCheckService extends Service {
     //gets course code of and an ID for course going on at the moment, null otherwise
     private LectureSession getCurrentSession(){
         LectureSession currSession = null;
-        Log.e(TAG, "get session - # courses: "+courses.size());
         for(Course c: courses){
             HashMap<String,Lecture> lectures = c.getLecturess();
             if(lectures!=null)
@@ -78,7 +80,7 @@ public class IdCheckService extends Service {
             public void onDataChange(DataSnapshot snapshot) {
                 for (DataSnapshot postSnapshot: snapshot.getChildren()){
                     Course c = postSnapshot.getValue(Course.class);
-                    Log.e("Course received", c.toString());
+                    Log.i("Course received", c.toString());
                     courses.add(c);
                 }
                 if(courses.size()>0)
@@ -88,28 +90,29 @@ public class IdCheckService extends Service {
                 stopSelf();
             }
             @Override public void onCancelled(FirebaseError error) {
-                Log.e(TAG,"The read failed: " + error.getMessage());
+                Log.i(TAG,"The read failed: " + error.getMessage());
             }
         });
     }
 
 
-    /*If there is a lecture scheduled for now and the student is registered for the course record him/her as present*/
+    /*If there is a lecture scheduled for now and the student is registered for the course
+     record him/her as present in the DB*/
     private void markAsPresentInFirebase(){
         LectureSession currentSession = getCurrentSession();
         if(currentSession !=null){
-            Log.e(TAG, "current session: " + currentSession.toString());
+            Log.i(TAG, "current session: " + currentSession.toString());
             //we have a class now so check if student is in that class
             if(isRegistered(scanned_id, currentSession.courseCode)){
-                Log.e(TAG, scanned_id + " present for "+ currentSession.toString());
+                Log.i(TAG, scanned_id + " present for "+ currentSession.toString());
                 FirebaseHelper fh = new FirebaseHelper();
                 fh.markAsPresent(currentSession.courseCode, currentSession.sessionID,scanned_id,student_name);
 
             }
             else {
                 Log.e(TAG, scanned_id + " not part of " + currentSession.toString());
-                Toast.makeText(getApplicationContext(), " not part of " + currentSession.toString(), Toast.LENGTH_LONG).show();
-                broadcastIntent(currentSession);
+                Toast.makeText(getApplicationContext(),scanned_id + " is not part of " + currentSession.toString(), Toast.LENGTH_LONG).show();
+                broadcastUnknownStudent(currentSession);
             }
         }
         else{
@@ -126,8 +129,9 @@ public class IdCheckService extends Service {
                 if(map_students != null)
                     for (Student s : map_students.values()) {
                         if (s.getId().equals(student_id)){
-                            student_name = s.getName();
-                            return true;}
+                            student_name = s.getName(); //set student name so we can broadcast it to be displayed in listview
+                            return true;
+                        }
                     }
             }
         }
@@ -141,16 +145,18 @@ public class IdCheckService extends Service {
 
     @Override
     public void onCreate() {
-        Log.e(TAG, "Service onCreate");
+        Log.i(TAG, "Service onCreate");
     }
 
     @Override
     public void onDestroy() {
         stopSelf();
-        Log.e(TAG, "Service onDestroy");
+        Log.i(TAG, "Service onDestroy");
     }
 
-    public void broadcastIntent(LectureSession currentSession){
+    /*send broadcast so main activity knows that the student is not registered for the course
+     and yo prompt the lecturer to do so*/
+    public void broadcastUnknownStudent(LectureSession currentSession){
         Intent i = new Intent();
         Bundle bundle = new Bundle();
         bundle.putString("courseCode",currentSession.courseCode);
@@ -160,7 +166,7 @@ public class IdCheckService extends Service {
         sendBroadcast(i);
     }
 
-    //Actual session object
+    //This class represents an actual session as depicted in the DB
     private class LectureSession{
         private String sessionID;
         private String courseCode;

@@ -21,6 +21,9 @@ import java.util.Map;
 /**
  * Created by jevon on 11-Apr-16.
  */
+
+/*Somewhat of a wrapper for firebase
+* All operations could not be abstracted to this class due to the callbacks that firebase query methods use*/
 public class FirebaseHelper {
     private String uid;
     private Firebase ref, ref_id;
@@ -30,6 +33,8 @@ public class FirebaseHelper {
         myApplication = MyApplication.getInstance();
         ref = myApplication.getRef();
         uid = myApplication.getSharedPreferences(Utils.SHAREDPREF, Context.MODE_PRIVATE).getString(Utils.ID,null);
+        /*keep a reference to the json tree from the point of the lecturer ID
+        since all DB access for a given lecturer would occur from this point*/
         ref_id = ref.child(Utils.LECTURERS).child(uid);
     }
 
@@ -43,6 +48,7 @@ public class FirebaseHelper {
         ref_id.child(course.getCourseCode()).setValue(course);
     }
 
+    //Adds a list of lectures to the DB
     public void addLectures(String courseCode, ArrayList<Lecture> lectures){
         ObjectMapper m = new ObjectMapper();
         Map<String,Object> sesMap = new HashMap<>();
@@ -50,11 +56,12 @@ public class FirebaseHelper {
                 try{
                     sesMap = m.convertValue(l, HashMap.class);
                     ref_id.child(courseCode).child(Utils.LECTURES).child(l.getDay().substring(0,3)+" "+l.getStartHr()).setValue(sesMap);
-                    Log.e("FBH","added lecture");
+                    Log.i("FBH","added lecture");
                 }catch (IllegalArgumentException e){e.printStackTrace();}
         }
     }
 
+    //records a student as present in the DB
     public  void markAsPresent(String courseCode, String session_id, String student_id, String student_name){
         int hour = TimeHelper.getCurrentHour();
         int minute = TimeHelper.getCurrentMinute();
@@ -71,14 +78,15 @@ public class FirebaseHelper {
         }
         ref_id.child(courseCode).child(Utils.SESSIONS).child(session_id).child(Utils.DATE).setValue(session_id);
         ref_id.child(courseCode).child(Utils.SESSIONS).child(session_id).child(Utils.ATTENDEES).child(student_id).setValue(attendeeMap);
-        broadcastIntent(student_id, student_name);
+        broadcastAddStudent(student_id, student_name);
     }
 
+
+    //broadcasts that a student was recorded as present so the list in the main activity can be updated
     public void addStudentToClass(String courseCode, String studentName, String studentID){
         Student student = new Student(studentID,studentName);
         ObjectMapper m = new ObjectMapper();
         Map<String, Object> studentMap = new HashMap<>();
-
         try{
             studentMap = m.convertValue(student, HashMap.class);
         }
@@ -92,7 +100,8 @@ public class FirebaseHelper {
         return this.uid;
     }
 
-    public void broadcastIntent(String studentId, String studentName){
+
+    public void broadcastAddStudent(String studentId, String studentName){
         Intent i = new Intent();
         i.setAction("ADD.STUDENT.TO.LISTVIEW");
         Bundle b = new Bundle();

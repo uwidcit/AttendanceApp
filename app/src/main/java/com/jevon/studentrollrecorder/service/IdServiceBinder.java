@@ -3,8 +3,10 @@ package com.jevon.studentrollrecorder.service;
 import android.os.Binder;
 
 /**
- * Created by jevon on 13-Apr-16.
+ * Binder class required to be able to bind the service to an activity
  */
+
+
 public class IdServiceBinder extends Binder {
     private IdCheckService idCheckService;
 

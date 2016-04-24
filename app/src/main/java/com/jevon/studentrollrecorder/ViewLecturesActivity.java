@@ -21,6 +21,8 @@ import com.jevon.studentrollrecorder.utils.Utils;
 
 import java.util.ArrayList;
 
+/*This activity shows the current list of lecture times for a course */
+
 public class ViewLecturesActivity extends AppCompatActivity {
     private ArrayList<Lecture> lectures;
     private ArrayAdapter<Lecture> adapter;
@@ -82,9 +84,6 @@ public class ViewLecturesActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement

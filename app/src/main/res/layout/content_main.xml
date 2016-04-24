@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Scan the barcode on a student ID to record them as present"
+        android:text="Scan the barcode on a student ID to record them as present."
         android:id="@+id/textView"
         android:textColor="#000000"
         android:background="@drawable/border_style"

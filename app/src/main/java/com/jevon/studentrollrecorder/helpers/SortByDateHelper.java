@@ -10,6 +10,9 @@ import java.util.Locale;
 /**
  * Created by mdls8 on 4/18/2016.
  */
+
+//Helper class for sorting sessions by date
+
 public class SortByDateHelper implements Comparator<Session> {
     public int compare(Session s1, Session s2){
         long s1Time = convertDate(s1);

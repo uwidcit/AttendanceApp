@@ -70,6 +70,17 @@
         android:orientation="vertical">
 
         <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:text="Click the add button to add a lecture to the list then the save button when you're finished."
+            android:id="@+id/textView"
+            android:textColor="#000000"
+            android:background="@drawable/border_style"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="center_horizontal" />
+
+        <TextView
             android:id="@+id/tv_instr"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -78,7 +89,7 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="#FFF"
             android:layout_marginBottom="7dp"
-            android:layout_marginTop="25dp"/>
+            android:layout_marginTop="15dp"/>
 
         <ListView
             android:id="@+id/lv_sessions"

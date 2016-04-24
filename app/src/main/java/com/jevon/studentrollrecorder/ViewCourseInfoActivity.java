@@ -12,6 +12,8 @@ import android.widget.ListView;
 
 import com.jevon.studentrollrecorder.utils.Utils;
 
+/*This activity allows the lecturer to choose from various details about the course to be viewed */
+
 public class ViewCourseInfoActivity extends AppCompatActivity {
 
     private Bundle bundle;

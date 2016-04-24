@@ -34,6 +34,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 
+/*This activity allows the lecturer to add lectures to a course*/
+
 public class AddLecturesActivity extends AppCompatActivity {
     private String name;
     private String code;
@@ -81,7 +83,7 @@ public class AddLecturesActivity extends AppCompatActivity {
                 courses = new ArrayList<>();
                 for (DataSnapshot postSnapshot: snapshot.getChildren()){
                     Course c = postSnapshot.getValue(Course.class);
-                    Log.e("Course received", c.toString());
+                    Log.i("Course received", c.toString());
                     courses.add(c);
                 }
             }
@@ -171,7 +173,6 @@ public class AddLecturesActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if(position > 0) {
                     day = days[position];
-                    Log.e("spinner", day);
                 }
                 else
                     day = null;

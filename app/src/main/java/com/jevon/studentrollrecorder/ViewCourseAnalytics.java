@@ -37,7 +37,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.StringTokenizer;
-import java.lang.Float;
+
+/*This activity shows analytics for the course as a whole*/
 
 public class ViewCourseAnalytics extends AppCompatActivity implements OnChartValueSelectedListener{
 

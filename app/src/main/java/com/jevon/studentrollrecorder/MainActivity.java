@@ -22,7 +22,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jevon.studentrollrecorder.service.IdCheckService;
@@ -42,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "Main";
     private Intent i;
     private IntentFilter intentFilter;
-    private String studentIDScanned=null;
+    private String studentIDScanned = null;
 
     private ServiceConnection idCheckServiceConnection = new ServiceConnection() {
         @Override
@@ -50,13 +49,11 @@ public class MainActivity extends AppCompatActivity {
             IdServiceBinder idServiceBinder = (IdServiceBinder) binder;
             idCheckService = idServiceBinder.getService();
             isBound = true;
-            Log.e(TAG,"onServiceConnected, isBound = true");
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
             isBound = false;
-            Log.e(TAG,"onServiceDisconnected, isBound = false");
         }
     };
 
@@ -67,8 +64,6 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         setUpListView();
-        TextView tv= (TextView)findViewById(R.id.textView);
-        tv.setBackgroundResource(R.drawable.border_style);
         intentFilter = new IntentFilter();
         intentFilter.addAction("SHOW.SNACKBAR.ADD.STUDENT");
         intentFilter.addAction("ADD.STUDENT.TO.LISTVIEW");
@@ -86,9 +81,9 @@ public class MainActivity extends AppCompatActivity {
                                 public void onClick(View view) {
                                     Bundle receivedData = intent.getExtras();
                                     Bundle bundle = new Bundle();
-                                    bundle.putString("userID", studentIDScanned);
-                                    bundle.putString("courseCode", receivedData.get("courseCode").toString());
-                                    bundle.putString("sessionID", receivedData.get("sessionID").toString());
+                                    bundle.putString(Utils.ID, studentIDScanned);
+                                    bundle.putString(Utils.COURSE_CODE, receivedData.get("courseCode").toString());
+                                    bundle.putString(Utils.SESSIONS, receivedData.get("sessionID").toString());
                                     Intent addStudentIntent = new Intent(MainActivity.this, AddStudentToSystem.class);
                                     addStudentIntent.putExtras(bundle);
                                     startActivity(addStudentIntent);
@@ -132,10 +127,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop() {
         isBound = false;
         unbindService(idCheckServiceConnection);
-        Log.e(TAG,"onStop service unbounded, isBound = false");
         super.onStop();
     }
 
+
+    //This list views shows recently recorded students. The clear all icon in the actionbar lets you clear the list
     private void setUpListView(){
         lv_present_students = (ListView) findViewById(R.id.lv_present);
         students = new ArrayList<>();
@@ -149,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == REQUEST_SCANNER && resultCode == RESULT_OK) {
             String results = data.getStringExtra("results");
             studentIDScanned = results;
-            Log.e(TAG,"scanned: "+results);
+            Log.i(TAG,"scanned: "+results);
             if(!isBound)
                 bindService(i, idCheckServiceConnection, Context.BIND_AUTO_CREATE);
             idCheckService.processStudent(results);

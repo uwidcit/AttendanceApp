@@ -13,6 +13,9 @@ import android.widget.EditText;
 import com.jevon.studentrollrecorder.helpers.FirebaseHelper;
 import com.jevon.studentrollrecorder.pojo.Course;
 import com.jevon.studentrollrecorder.utils.Utils;
+/*
+* This activity allows the lecturer to add a new course to his profile then gives him/her the option
+* to set lecture times for that course*/
 
 public class AddCourseActivity extends AppCompatActivity {
     private EditText et_code, et_name;
@@ -27,7 +30,6 @@ public class AddCourseActivity extends AppCompatActivity {
         et_name = (EditText) findViewById(R.id.et_course_name);
     }
 
-    //TODO: check for internet connectivity 1st
     private void saveCourse() {
         final String name = et_name.getText().toString().toUpperCase();
         final String code = et_code.getText().toString().toUpperCase();

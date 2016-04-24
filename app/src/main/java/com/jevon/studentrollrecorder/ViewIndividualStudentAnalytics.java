@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -29,6 +28,8 @@ import com.jevon.studentrollrecorder.utils.Utils;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+/*This activity shows analytics for a selected student*/
 
 public class ViewIndividualStudentAnalytics extends AppCompatActivity {
 

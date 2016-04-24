@@ -17,6 +17,10 @@ import com.jevon.studentrollrecorder.utils.Utils;
 
 import java.util.ArrayList;
 
+/*Displays the current list of students for the selected course in a custom recycler view
+* A recycler view is used since it is more efficient in dealing with views and large data sets
+ * and a listing of students in a course may be large*/
+
 public class ViewStudentAnalyticsActivity extends AppCompatActivity {
 
     private String courseCode;
@@ -38,25 +42,7 @@ public class ViewStudentAnalyticsActivity extends AppCompatActivity {
         }
         setUpRecyclerView();
         loadData();
-/*        student_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                 build a bundle with the course data and student data to pass to next activity.
-                Student student = students.get(position);
-
-                Bundle bundle = new Bundle();
-                bundle.putString("studentName", student.getName());
-                bundle.putString("studentId", student.getId());
-
-                bundle.putString(Utils.COURSE_CODE, courseCode);
-                bundle.putString(Utils.COURSE_NAME, courseName);
-
-                Intent intent = new Intent(ViewStudentAnalyticsActivity.this, ViewIndividualStudentAnalytics.class);
-                intent.putExtras(bundle);
-                startActivity(intent);
-            }
-        });*/
     }
 
     private void setUpRecyclerView(){

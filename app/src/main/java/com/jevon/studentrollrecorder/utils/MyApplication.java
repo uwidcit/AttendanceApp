@@ -8,7 +8,8 @@ import com.firebase.client.Firebase;
  * Created by jevon on 11-Apr-16.
  */
 
-//Extending the Application class allows us to store fields and methods accessible to all activities and classes
+/*Extending the Application class allows us to store runtime data and have methods
+that are accessible to all activities and classes*/
 public class MyApplication extends Application {
     private static MyApplication mApplication;
     private Firebase ref;

@@ -14,6 +14,7 @@ import java.util.ArrayList;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
+/*This activity shows shows the actual view finder for scanning barcodes and returns the results to the calling activity*/
 public class Scanner extends AppCompatActivity implements ZXingScannerView.ResultHandler {
     private ZXingScannerView mScannerView;
     private Switch sw_flash;
@@ -56,7 +57,8 @@ public class Scanner extends AppCompatActivity implements ZXingScannerView.Resul
 
     @Override
     public void handleResult(Result result) {
-        ComponentName cn = getCallingActivity(); //so we can create an intent for any activity
+        //we can create an intent for any activity in case we decide to let multiple activities start the scanner
+        ComponentName cn = getCallingActivity();
         if(cn != null){
             Intent i = new Intent(Scanner.this, cn.getClass());
             i.putExtra("results", result.getText());
