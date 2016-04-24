@@ -240,7 +240,15 @@ public class ViewCourseAnalytics extends AppCompatActivity implements OnChartVal
     public void onLateUpdate(View view){
         String valueEntered = lateSetting.getText().toString();
 
-        lateMarker = Integer.valueOf(valueEntered);
+        // get the late time entered in mins
+        try{
+            lateMarker = Integer.parseInt(valueEntered);
+        }
+        catch(Exception e){
+
+        }
+
+        // update chart
         populateLineChart();
     }
 
@@ -262,7 +270,7 @@ public class ViewCourseAnalytics extends AppCompatActivity implements OnChartVal
                 dataset.setDrawCubic(true);
                 dataset.setDrawValues(false);
                 dataset.setColor(Color.BLUE);
-                dataset.setCircleColor(Color.RED);
+                dataset.setCircleColor(Color.GREEN);
 
                 dataset2 = new LineDataSet(entriesLateness, "# of Students Late");
                 dataset2.setDrawCircles(true);
@@ -271,7 +279,7 @@ public class ViewCourseAnalytics extends AppCompatActivity implements OnChartVal
                 dataset2.setColor(Color.RED);
                 dataset2.setDrawFilled(true);
                 dataset2.setFillColor(Color.RED);
-                dataset2.setCircleColor(Color.BLUE);
+                dataset2.setCircleColor(Color.GREEN);
 
                 data = new LineData(labels, dataset);
                 data.setValueTextColor(Color.BLUE);
