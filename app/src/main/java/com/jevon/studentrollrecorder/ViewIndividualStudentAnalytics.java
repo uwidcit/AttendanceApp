@@ -129,7 +129,6 @@ public class ViewIndividualStudentAnalytics extends AppCompatActivity {
         /* convert to pieDataSet. */
         PieDataSet dataset = new PieDataSet(entries, "Sessions");
         dataset.setColors(ColorTemplate.COLORFUL_COLORS);
-        dataset.setValueTextSize(12);
         /* create an arraylist of labels for piechart. */
         ArrayList<String> labels = new ArrayList<String>();
         labels.add("Attended");
@@ -159,7 +158,6 @@ public class ViewIndividualStudentAnalytics extends AppCompatActivity {
         /* convert to pieDataSet. */
         PieDataSet dataset = new PieDataSet(entries, "Sessions");
         dataset.setColors(ColorTemplate.COLORFUL_COLORS);
-        dataset.setValueTextSize(12);
         /* create an arraylist of labels for piechart. */
         ArrayList<String> labels = new ArrayList<String>();
         labels.add("Attended");
@@ -167,7 +165,6 @@ public class ViewIndividualStudentAnalytics extends AppCompatActivity {
 
         PieData data = new PieData(labels, dataset);
         this.attendancePieChart.setCenterText(centerText);
-        this.attendancePieChart.setCenterTextSize(10);
         this.attendancePieChart.setUsePercentValues(true);
         this.attendancePieChart.setData(data);
 
@@ -183,7 +180,6 @@ public class ViewIndividualStudentAnalytics extends AppCompatActivity {
         /* convert to pieDataSet. */
         PieDataSet dataset = new PieDataSet(entries, "Sessions");
         dataset.setColors(ColorTemplate.COLORFUL_COLORS);
-        dataset.setValueTextSize(12);
         /* create an arraylist of labels for piechart. */
         ArrayList<String> labels = new ArrayList<String>();
         labels.add("Early");
@@ -215,7 +211,6 @@ public class ViewIndividualStudentAnalytics extends AppCompatActivity {
         /* convert to pieDataSet. */
         PieDataSet dataset = new PieDataSet(entries, "Sessions");
         dataset.setColors(ColorTemplate.COLORFUL_COLORS);
-        dataset.setValueTextSize(12);
         /* create an arraylist of labels for piechart. */
         ArrayList<String> labels = new ArrayList<String>();
         labels.add("Early");
@@ -223,7 +218,6 @@ public class ViewIndividualStudentAnalytics extends AppCompatActivity {
 
         PieData data = new PieData(labels, dataset);
         this.punctualityPieChart.setCenterText(centerText);
-        this.punctualityPieChart.setCenterTextSize(10);
         this.punctualityPieChart.setUsePercentValues(true);
         this.punctualityPieChart.setData(data);
 
