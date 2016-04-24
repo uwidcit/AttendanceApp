@@ -101,8 +101,11 @@ public class MainActivity extends AppCompatActivity {
                 Bundle recievedData = intent.getExtras();
                 String studentID = recievedData.get(Utils.ID).toString();
                 String studentName = recievedData.get(Utils.NAME).toString();
-                if(!students.contains(studentID + " - " + studentName) )
-                    adapter.add(studentID + " - " + studentName);
+                if(!students.contains(studentID + " - " + studentName) ) {
+                    students.add(0, studentID + " - " + studentName);
+                    adapter.notifyDataSetChanged();
+                }
+
             }
         }
     };

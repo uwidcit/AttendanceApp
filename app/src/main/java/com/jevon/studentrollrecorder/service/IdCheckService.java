@@ -59,7 +59,7 @@ public class IdCheckService extends Service {
             HashMap<String,Lecture> lectures = c.getLecturess();
             if(lectures!=null)
                 for (Lecture lecture : lectures.values()) {
-                    if(currentHour >= lecture.getStartHr() && currentHour < lecture.getEndHr() && lecture.getDay().equalsIgnoreCase(today)){
+                    if(currentHour >= lecture.getStartHr() && currentHour <= lecture.getEndHr() && lecture.getDay().equalsIgnoreCase(today)){
                         currSession = new LectureSession( c.getCourseCode(), TimeHelper.getIDTimeStamp(lecture.getStartHr()) );
                     }
                 }
@@ -73,7 +73,7 @@ public class IdCheckService extends Service {
     public void getCourses(){
         FirebaseHelper fh = new FirebaseHelper();
         Firebase ref_id = fh.getRef_id();
-        ref_id.addValueEventListener(new ValueEventListener() {
+        ref_id.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 for (DataSnapshot postSnapshot: snapshot.getChildren()){
@@ -85,7 +85,7 @@ public class IdCheckService extends Service {
                     markAsPresentInFirebase();
                 else
                     Toast.makeText(getApplicationContext(),"No courses found on your profile",Toast.LENGTH_LONG).show();
-//                stopSelf();
+                stopSelf();
             }
             @Override public void onCancelled(FirebaseError error) {
                 Log.e(TAG,"The read failed: " + error.getMessage());

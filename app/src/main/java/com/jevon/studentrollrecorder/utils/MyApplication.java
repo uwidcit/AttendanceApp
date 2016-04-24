@@ -1,8 +1,6 @@
 package com.jevon.studentrollrecorder.utils;
 
 import android.app.Application;
-import android.content.Context;
-import android.net.ConnectivityManager;
 
 import com.firebase.client.Firebase;
 
@@ -35,9 +33,5 @@ public class MyApplication extends Application {
         return this.ref;
     }
 
-    public boolean isNetworkConnected() {
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        return cm.getActiveNetworkInfo() != null;
-    }
 
 }
