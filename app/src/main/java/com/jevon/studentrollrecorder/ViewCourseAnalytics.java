@@ -270,7 +270,7 @@ public class ViewCourseAnalytics extends AppCompatActivity implements OnChartVal
                 dataset2.setDrawValues(false);
                 dataset2.setColor(Color.RED);
                 dataset2.setDrawFilled(true);
-                dataset2.setFillColor(Color.YELLOW);
+                dataset2.setFillColor(Color.RED);
                 dataset2.setCircleColor(Color.BLUE);
 
                 data = new LineData(labels, dataset);
@@ -299,7 +299,7 @@ public class ViewCourseAnalytics extends AppCompatActivity implements OnChartVal
         lineChart.setNoDataTextDescription("No Student Attendance Data Available.");
         // descriptive text that appears in the bottom right corner of the chart
         lineChart.setDescription("Student Attendance");
-        lineChart.setDescriptionColor(Color.WHITE);
+        lineChart.setDescriptionColor(Color.BLACK);
 
         // enable touch gestures
         lineChart.setTouchEnabled(true);
