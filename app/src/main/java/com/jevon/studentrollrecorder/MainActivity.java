@@ -14,6 +14,7 @@ import android.os.IBinder;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -67,7 +68,6 @@ public class MainActivity extends AppCompatActivity {
         intentFilter = new IntentFilter();
         intentFilter.addAction("SHOW.SNACKBAR.ADD.STUDENT");
         intentFilter.addAction("ADD.STUDENT.TO.LISTVIEW");
-        registerReceiver(mReceiver,intentFilter);
     }
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
